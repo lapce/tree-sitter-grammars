@@ -41,6 +41,7 @@ jobs:
           echo 'C:\Users\runneradmin\.cargo\bin\' >> $env:GITHUB_PATH
 
       - name: Build gramamrs
+        if: always()
         run: |
             foreach($grammar in (gci ./grammars)) {
               cd $grammar
@@ -48,6 +49,7 @@ jobs:
             }
 
       - uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: lapce-windows
           path: |
@@ -80,14 +82,28 @@ jobs:
       - run: cargo install --path ./build-tree-sitter --locked
 
       - name: Build
+        if: always()
         run: |
           for grammar in $(ls ./grammars); do
-            pushd ./grammars/$grammar
-            build-tree-sitter
+            if [ "$grammar" = "tree-sitter-markdown" ]; then
+              pushd ./grammars/$grammar/tree-sitter-markdown
+              build-tree-sitter
+              cd ../tree-sitter-markdown-inline
+              build-tree-sitter
+            elif [ "$grammar" = "tree-sitter-ocaml" ]; then
+              pushd ./grammars/$grammar/ocaml
+              build-tree-sitter
+              cd ../interface
+              build-tree-sitter
+            else
+              pushd ./grammars/$grammar
+              build-tree-sitter
+            fi
             popd
           done
 
       - uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: grammars-linux
           path: |
