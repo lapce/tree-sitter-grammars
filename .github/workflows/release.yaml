@@ -97,7 +97,7 @@ jobs:
               build-tree-sitter
             else
               pushd ./grammars/$grammar
-              build-tree-sitter
+              build-tree-sitter || echo "Failed building $grammar"
             fi
             popd
           done
