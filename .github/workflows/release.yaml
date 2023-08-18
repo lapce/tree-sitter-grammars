@@ -34,7 +34,7 @@ jobs:
         run: rustup update
 
       - name: Fetch dependencies
-        run: cargo install --git https://github.com/panekj/tree-sitter-build.git --locked
+        run: cargo install --git https://github.com/panekj/build-tree-sitter.git --locked
 
       - name: Build gramamrs
         run: |
@@ -60,8 +60,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: |
-          apt-get -y update
-          apt-get -y install curl wget clang pkg-config
+          sudo apt-get -y update
+          sudo apt-get -y install curl wget clang pkg-config
 
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
@@ -129,7 +129,7 @@ jobs:
         run: rustup-init --target ${{ matrix.triple }} --default-toolchain stable --profile minimal -y
         shell: alpine.sh {0}
 
-      - run: cargo install --git https://github.com/panekj/tree-sitter-build.git --locked
+      - run: cargo install --git https://github.com/panekj/build-tree-sitter.git --locked
         shell: alpine.sh {0}
 
       - name: Build ${{ matrix.triple }}
