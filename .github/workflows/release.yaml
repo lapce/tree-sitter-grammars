@@ -60,6 +60,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: true
+
       - name: Install dependencies
         run: |
           sudo apt-get -y update
@@ -108,6 +111,8 @@ jobs:
             platform: aarch64
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: true
 
       - name: Set up Alpine Linux for ${{ matrix.platform }} (target arch)
         id: alpine-target
