@@ -36,7 +36,9 @@ jobs:
         run: rustup update
 
       - name: Fetch dependencies
-        run: cargo install --git https://github.com/panekj/build-tree-sitter.git --locked
+        run: |
+          cargo install --git https://github.com/panekj/build-tree-sitter.git --locked
+          echo 'C:\Users\runneradmin\.cargo\bin\' >> $env:GITHUB_PATH
 
       - name: Build gramamrs
         run: |
