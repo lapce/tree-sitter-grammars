@@ -1,0 +1,170 @@
+name: Release
+
+on:
+  schedule:
+    - cron: 0 0 * * *
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for release'
+        required: false
+        default: nightly
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+*"]
+  pull_request:
+    paths:
+      # trigger release workflow only if this file changed
+      - .github/workflows/release.yml
+
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CARGO_TERM_COLOR: always
+  CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    env:
+      RELEASE_TAG_NAME: ${{ inputs.tag_name }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Update rust
+        run: rustup update
+
+      - name: Fetch dependencies
+        run: cargo install --git https://github.com/panekj/tree-sitter-build.git --locked
+
+      - name: Build gramamrs
+        run: |
+            foreach($grammar in (gci ./grammars)) {
+              cd $grammar
+              tree-sitter-build .
+            }
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: lapce-windows
+          path: |
+            ./build/*.dll
+          retention-days: 1
+
+  linux:
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG_NAME: ${{ needs.tagname.outputs.tag_name }}
+      DEBIAN_FRONTEND: noninteractive
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          apt-get -y update
+          apt-get -y install curl wget clang pkg-config
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: x86_64-unknown-linux-gnu
+          profile: minimal
+
+      - run: cargo install --git https://github.com/panekj/build-tree-sitter.git --locked
+
+      - name: Build
+        run: |
+          for grammar in $(ls ./grammars); do
+            pushd ./grammars/$grammar
+            build-tree-sitter
+            popd
+          done
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: grammars-linux
+          path: |
+            ./build/*.so
+          retention-days: 1
+
+  linux-musl:
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG_NAME: ${{ needs.tagname.outputs.tag_name }}
+      CROSS_SYSROOT: /mnt/alpine-${{ matrix.platform }}
+      PACKAGES: >
+        libgit2-static libssh2-static openssl-libs-static
+        libssl3 gtk+3.0-dev http-parser-dev rustup
+        build-base openssl-dev git lld clang
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - triple: x86_64-unknown-linux-musl
+            platform: x86_64
+          - triple: aarch64-unknown-linux-musl
+            platform: aarch64
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Alpine Linux for ${{ matrix.platform }} (target arch)
+        id: alpine-target
+        uses: jirutka/setup-alpine@v1
+        with:
+          arch: ${{ matrix.platform }}
+          branch: edge
+          packages: ${{ env.PACKAGES }}
+          shell-name: alpine-target.sh
+
+      - name: Set up Alpine Linux for x86_64 (build arch)
+        uses: jirutka/setup-alpine@v1
+        with:
+          arch: x86_64
+          branch: edge
+          packages: ${{ env.PACKAGES }}
+          volumes: ${{ steps.alpine-target.outputs.root-path }}:${{ env.CROSS_SYSROOT }}
+          shell-name: alpine.sh
+
+      - name: Install Rust stable toolchain via rustup
+        run: rustup-init --target ${{ matrix.triple }} --default-toolchain stable --profile minimal -y
+        shell: alpine.sh {0}
+
+      - run: cargo install --git https://github.com/panekj/tree-sitter-build.git --locked
+        shell: alpine.sh {0}
+
+      - name: Build ${{ matrix.triple }}
+        shell: alpine.sh {0}
+        env:
+          LIBZ_SYS_STATIC: 1
+          LIBSSH2_STATIC: 1
+          LIBGIT2_STATIC: 1
+          OPENSSL_STATIC: 1
+          OPENSSL_DIR: ${{ env.CROSS_SYSROOT }}/usr # static/dynamic lib workaround <3
+          OPENSSL_NO_VENDOR: 1 # don't even try to build without it on musl
+          PKG_CONFIG_ALL_STATIC: 1
+          PKG_CONFIG_LIBDIR: ${{ env.CROSS_SYSROOT }}/usr/lib/pkgconfig
+          RUSTFLAGS: -C target-feature=+crt-static -C linker=/usr/bin/ld.lld # link runtime static, use universal linker
+          CARGO_BUILD_TARGET: ${{ matrix.triple }}
+          CARGO_PROFILE_RELEASE_LTO: 'true'
+          CARGO_PROFILE_RELEASE_STRIP: symbols # remove unneeded debug stuff
+          CARGO_PROFILE_RELEASE_OPT_LEVEL: 's' # optimise for size
+          CARGO_PROFILE_RELEASE_CODEGEN_UNITS: '1' # optimise each crate
+          SYSROOT: /dummy  # workaround for https://github.com/rust-lang/pkg-config-rs/issues/102
+          CC: clang
+        run: |
+          # Workaround for https://github.com/rust-lang/pkg-config-rs/issues/102
+          echo -e '#!/bin/sh\nPKG_CONFIG_SYSROOT_DIR=${{ env.CROSS_SYSROOT }} exec pkgconf "$@"' \
+              | install -m755 /dev/stdin pkg-config
+          export PKG_CONFIG="$(pwd)/pkg-config"
+          for grammar in $(ls ./grammars); do
+            pushd $grammar
+            tree-sitter-build .
+            popd
+          done
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: grammars-${{ matrix.platform }}
+          path: |
+            ./build/*.so
+          retention-days: 1
