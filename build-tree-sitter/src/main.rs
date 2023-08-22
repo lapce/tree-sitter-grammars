@@ -1,54 +1,91 @@
 use anyhow::{bail, Context, Result};
-use colored::Colorize;
-use log;
+use clap::Parser;
 use std::{
     path::{Path, PathBuf},
     time::SystemTime,
 };
+use tracing::{info, Level, error};
+use tracing_subscriber::FmtSubscriber;
 
-fn main() {
-    pretty_env_logger::init();
-    build_grammar().unwrap();
+const BUILD_TARGET: &str = env!("BUILD_TARGET");
+
+#[derive(Parser)]
+struct Cli {
+    dir: PathBuf,
+    output: PathBuf,
 }
 
-fn build_grammar() -> Result<bool> {
-    let grammar_dir = std::env::current_dir().unwrap();
-
-    // Build the tree sitter library
-    let paths = TreeSitterPaths::new(grammar_dir.clone(), None);
-    build_tree_sitter_library(&paths).with_context(|| {
-        format!(
-            "Failed to build tree sitter library in {grammar_dir}",
-            grammar_dir = grammar_dir.display()
-        )
-    })
+fn logging() -> Result<()> {
+    let subscriber = FmtSubscriber::builder()
+        .with_max_level(Level::DEBUG)
+        .finish();
+    tracing::subscriber::set_global_default(subscriber)?;
+    Ok(())
 }
 
-fn tree_sitter_library_path() -> Result<PathBuf> {
-    let mut library_path =
-        std::env::current_dir()?.join(std::env::current_dir()?.file_name().unwrap());
+fn find(dir: &PathBuf) -> Result<Vec<PathBuf>> {
+    info!("Walking over {}", dir.display());
+
+    let mut paths = vec![];
+    for entry in walkdir::WalkDir::new(dir)
+        .follow_links(true)
+        .into_iter()
+        .filter_map(|e| e.ok())
+    {
+        let f_name = entry.file_name().to_string_lossy();
+
+        if f_name == "src" {
+            let path = entry.into_path().parent().unwrap().to_path_buf();
+            info!("Found {}", path.display());
+            paths.push(path);
+        }
+    }
+
+    Ok(paths)
+}
+
+fn main() -> Result<()> {
+    logging()?;
+
+    let cli = Cli::parse();
+    let grammars_dir = &cli.dir.canonicalize()?;
+    let output_dir = cli.output.canonicalize()?;
+    if !output_dir.exists() {
+        std::fs::create_dir_all(&output_dir)?;
+    }
+
+    let paths = find(grammars_dir)?;
+    for grammar_dir in paths {
+        let paths = TreeSitterPaths::new(grammar_dir.clone(), None);
+        match build_tree_sitter_library(&paths, &output_dir, grammar_dir.file_name().unwrap().to_str().unwrap()) {
+            Ok(_) => {},
+            Err(e) => {
+                error!("Failed to build grammar: {e}");
+                continue;
+            }
+        };
+    }
+
+    Ok(())
+}
+
+fn build_tree_sitter_library(paths: &TreeSitterPaths, output: &Path, name: &str) -> Result<bool> {
+    let mut library_path = output.join(name);
     library_path.set_extension(std::env::consts::DLL_EXTENSION);
-    Ok(library_path)
-}
+    info!("Build object: {}", library_path.display());
 
-fn build_tree_sitter_library(paths: &TreeSitterPaths) -> Result<bool> {
-    let library_path = tree_sitter_library_path()?;
     let should_recompile = paths.should_recompile(&library_path)?;
 
     if !should_recompile {
         return Ok(false);
     }
 
-    log::info!(
-        "{:>12} grammar {}",
-        "Building".bold().bright_cyan(),
-        library_path.to_string_lossy().dimmed(),
-    );
+    info!("Building grammar {}", library_path.display());
 
-    let cpp = if let Some(TreeSitterScannerSource { ref path, cpp }) = paths.scanner {
-      cpp
+    let cpp = if let Some(TreeSitterScannerSource { path: _, cpp }) = paths.scanner {
+        cpp
     } else {
-      false
+        false
     };
 
     let mut compiler = cc::Build::new();
@@ -91,7 +128,7 @@ fn build_tree_sitter_library(paths: &TreeSitterPaths) -> Result<bool> {
 
     // Compile the tree sitter library
     let command_str = format!("{command:?}");
-    log::info!("{:>12} {command_str}", "Running".bold().dimmed());
+    info!("Running {command_str}");
     let output = command
         .output()
         .with_context(|| format!("Failed to run C compiler. Command: {command_str}"))?;
@@ -175,5 +212,3 @@ impl TreeSitterPaths {
 fn mtime(path: &Path) -> Result<SystemTime> {
     Ok(std::fs::metadata(path)?.modified()?)
 }
-
-const BUILD_TARGET: &str = env!("BUILD_TARGET");

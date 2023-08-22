@@ -37,16 +37,13 @@ jobs:
 
       - name: Fetch dependencies
         run: |
-          cargo install --path ./build-tree-sitter --locked
-          echo 'C:\Users\runneradmin\.cargo\bin\' >> $env:GITHUB_PATH
+            cargo fetch --locked
+            cargo install --path ./build-tree-sitter --frozen
 
       - name: Build gramamrs
         if: always()
         run: |
-            foreach($grammar in (gci ./grammars)) {
-              cd $grammar
-              tree-sitter-build .
-            }
+            build-tree-sitter --dir ./grammars --output ./build
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -79,28 +76,14 @@ jobs:
           target: x86_64-unknown-linux-gnu
           profile: minimal
 
-      - run: cargo install --path ./build-tree-sitter --locked
+      - run: |
+          cargo fetch --locked
+          cargo install --path ./build-tree-sitter --frozen
 
       - name: Build
         if: always()
         run: |
-          for grammar in $(ls ./grammars); do
-            if [ "$grammar" = "tree-sitter-markdown" ]; then
-              pushd ./grammars/$grammar/tree-sitter-markdown
-              build-tree-sitter
-              cd ../tree-sitter-markdown-inline
-              build-tree-sitter
-            elif [ "$grammar" = "tree-sitter-ocaml" ]; then
-              pushd ./grammars/$grammar/ocaml
-              build-tree-sitter
-              cd ../interface
-              build-tree-sitter
-            else
-              pushd ./grammars/$grammar
-              build-tree-sitter || echo "Failed building $grammar"
-            fi
-            popd
-          done
+          build-tree-sitter --dir ./grammars --output ./build
 
       - uses: actions/upload-artifact@v3
         if: always()
@@ -181,11 +164,7 @@ jobs:
           echo -e '#!/bin/sh\nPKG_CONFIG_SYSROOT_DIR=${{ env.CROSS_SYSROOT }} exec pkgconf "$@"' \
               | install -m755 /dev/stdin pkg-config
           export PKG_CONFIG="$(pwd)/pkg-config"
-          for grammar in $(ls ./grammars); do
-            pushd $grammar
-            tree-sitter-build .
-            popd
-          done
+          build-tree-sitter --dir ./grammars --output ./build
 
       - uses: actions/upload-artifact@v3
         with:
