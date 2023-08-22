@@ -36,9 +36,7 @@ jobs:
         run: rustup update
 
       - name: Fetch dependencies
-        run: |
-            cargo fetch --locked
-            cargo install --path ./build-tree-sitter --frozen
+        run: cargo install --path ./build-tree-sitter --locked
 
       - name: Build gramamrs
         if: always()
@@ -76,9 +74,7 @@ jobs:
           target: x86_64-unknown-linux-gnu
           profile: minimal
 
-      - run: |
-          cargo fetch --locked
-          cargo install --path ./build-tree-sitter --frozen
+      - run: cargo install --path ./build-tree-sitter --locked
 
       - name: Build
         if: always()
