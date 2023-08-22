@@ -41,6 +41,7 @@ jobs:
       - name: Build gramamrs
         if: always()
         run: |
+            mkdir build
             build-tree-sitter ./grammars ./build
 
       - uses: actions/upload-artifact@v3
@@ -79,6 +80,7 @@ jobs:
       - name: Build
         if: always()
         run: |
+          mkdir -p build
           build-tree-sitter ./grammars ./build
 
       - uses: actions/upload-artifact@v3
@@ -160,6 +162,7 @@ jobs:
           echo -e '#!/bin/sh\nPKG_CONFIG_SYSROOT_DIR=${{ env.CROSS_SYSROOT }} exec pkgconf "$@"' \
               | install -m755 /dev/stdin pkg-config
           export PKG_CONFIG="$(pwd)/pkg-config"
+          mkdir -p build
           build-tree-sitter ./grammars ./build
 
       - uses: actions/upload-artifact@v3

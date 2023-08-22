@@ -12,7 +12,7 @@ const BUILD_TARGET: &str = env!("BUILD_TARGET");
 #[derive(Parser)]
 struct Cli {
     dir: PathBuf,
-    output: PathBuf,
+    output: String,
 }
 
 fn logging() -> Result<()> {
@@ -49,7 +49,7 @@ fn main() -> Result<()> {
 
     let cli = Cli::parse();
     let grammars_dir = &cli.dir.canonicalize()?;
-    let output_dir = cli.output.canonicalize()?;
+    let output_dir = PathBuf::from(cli.output).canonicalize()?;
     if !output_dir.exists() {
         std::fs::create_dir_all(&output_dir)?;
     }
@@ -196,10 +196,12 @@ impl TreeSitterPaths {
         if !library_path.exists() {
             return Ok(true);
         };
+
         let library_mtime = mtime(library_path)?;
         if mtime(&self.parser)? > library_mtime {
             return Ok(true);
         }
+
         if let Some(TreeSitterScannerSource { ref path, .. }) = self.scanner {
             if mtime(path)? > library_mtime {
                 return Ok(true);
