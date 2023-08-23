@@ -19,13 +19,12 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  CARGO_TERM_COLOR: always
-  CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}-latest
     strategy:
+      fail-fast: false
       matrix:
         os: [windows, ubuntu, macos]
     env:
@@ -36,7 +35,7 @@ jobs:
           submodules: true
 
       - name: Install Ubuntu dependencies
-        if: ${{ matrix.os == "ubuntu" }}
+        if: matrix.os == 'ubuntu'
         run: |
           sudo apt-get -y update
           sudo apt-get -y install curl wget clang pkg-config
