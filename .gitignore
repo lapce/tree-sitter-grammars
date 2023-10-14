@@ -1,4 +1,10 @@
 **.so
 **.log
-**/target
-build/
+**.dll
+**.dylib
+**.exp
+**.lib
+**.obj
+
+/target
+/output

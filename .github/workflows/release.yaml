@@ -44,18 +44,19 @@ jobs:
         run: rustup update
 
       - name: Fetch dependencies
-        run: cargo install --path ./build-tree-sitter --locked
+        run: |
+          cargo install --path ./build-tree-sitter --locked
+          cargo install tree-sitter-cli --locked
 
-      - name: Build gramamrs
+      - name: Build grammars
         if: always()
         run: |
-            mkdir build
-            build-tree-sitter ./grammars ./build
+            build-tree-sitter --output ./output
 
       - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: lapce-${{ matrix.os }}
           path: |
-            ./build
+            ./output
           retention-days: 1

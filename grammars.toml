@@ -1,0 +1,172 @@
+[grammars]
+
+# [grammars.tree-sitter-name]
+# path     = "./grammars/tree-sitter-name"
+# cpp      = true
+# relative = "subpath"
+
+[grammars.tree-sitter-bash]
+path = "./grammars/tree-sitter-bash"
+
+[grammars.tree-sitter-c]
+path = "./grammars/tree-sitter-c"
+
+[grammars.tree-sitter-c-sharp]
+path = "./grammars/tree-sitter-c-sharp"
+
+[grammars.tree-sitter-clojure]
+path = "./grammars/tree-sitter-clojure"
+
+[grammars.tree-sitter-cmake]
+path = "./grammars/tree-sitter-cmake"
+
+[grammars.tree-sitter-cpp]
+path = "./grammars/tree-sitter-cpp"
+
+[grammars.tree-sitter-css]
+path = "./grammars/tree-sitter-css"
+
+[grammars.tree-sitter-d]
+path = "./grammars/tree-sitter-d"
+
+[grammars.tree-sitter-dockerfile]
+path = "./grammars/tree-sitter-dockerfile"
+
+[grammars.tree-sitter-elixir]
+path = "./grammars/tree-sitter-elixir"
+
+[grammars.tree-sitter-elm]
+path = "./grammars/tree-sitter-elm"
+
+[grammars.tree-sitter-erlang]
+path = "./grammars/tree-sitter-erlang"
+
+[grammars.tree-sitter-glimmer]
+path = "./grammars/tree-sitter-glimmer"
+
+[grammars.tree-sitter-glsl]
+path = "./grammars/tree-sitter-glsl"
+
+[grammars.tree-sitter-go]
+path = "./grammars/tree-sitter-go"
+
+[grammars.tree-sitter-hare]
+path = "./grammars/tree-sitter-hare"
+
+[grammars.tree-sitter-haskell]
+path = "./grammars/tree-sitter-haskell"
+
+[grammars.tree-sitter-haxe]
+path = "./grammars/tree-sitter-haxe"
+
+[grammars.tree-sitter-hcl]
+path = "./grammars/tree-sitter-hcl"
+
+[grammars.tree-sitter-html]
+path = "./grammars/tree-sitter-html"
+
+[grammars.tree-sitter-java]
+path = "./grammars/tree-sitter-java"
+
+[grammars.tree-sitter-javascript]
+path = "./grammars/tree-sitter-javascript"
+
+[grammars.tree-sitter-json]
+path = "./grammars/tree-sitter-json"
+
+[grammars.tree-sitter-julia]
+path = "./grammars/tree-sitter-julia"
+
+[grammars.tree-sitter-kotlin]
+path = "./grammars/tree-sitter-kotlin"
+
+[grammars.tree-sitter-latex]
+path = "./grammars/tree-sitter-latex"
+
+[grammars.tree-sitter-lua]
+path = "./grammars/tree-sitter-lua"
+
+[grammars.tree-sitter-markdown]
+path     = "./grammars/tree-sitter-markdown"
+relative = "tree-sitter-markdown"
+
+[grammars.tree-sitter-markdown-inline]
+path     = "./grammars/tree-sitter-markdown"
+relative = "tree-sitter-markdown-inline"
+
+[grammars.tree-sitter-nix]
+path = "./grammars/tree-sitter-nix"
+
+[grammars.tree-sitter-ocaml]
+path     = "./grammars/tree-sitter-ocaml"
+relative = "ocaml"
+
+[grammars.tree-sitter-ocaml-interface]
+path     = "./grammars/tree-sitter-ocaml"
+relative = "interface"
+
+[grammars.tree-sitter-php]
+path = "./grammars/tree-sitter-php"
+
+[grammars.tree-sitter-prisma]
+path = "./grammars/tree-sitter-prisma"
+
+[grammars.tree-sitter-protobuf]
+path = "./grammars/tree-sitter-protobuf"
+
+[grammars.tree-sitter-python]
+path = "./grammars/tree-sitter-python"
+
+[grammars.tree-sitter-ql]
+path = "./grammars/tree-sitter-ql"
+
+[grammars.tree-sitter-r]
+path = "./grammars/tree-sitter-r"
+
+[grammars.tree-sitter-ruby]
+path = "./grammars/tree-sitter-ruby"
+
+[grammars.tree-sitter-rust]
+path = "./grammars/tree-sitter-rust"
+
+[grammars.tree-sitter-scheme]
+path = "./grammars/tree-sitter-scheme"
+
+[grammars.tree-sitter-scss]
+path = "./grammars/tree-sitter-scss"
+
+[grammars.tree-sitter-sql]
+path = "./grammars/tree-sitter-sql"
+
+[grammars.tree-sitter-svelte]
+path = "./grammars/tree-sitter-svelte"
+
+[grammars.tree-sitter-swift]
+path = "./grammars/tree-sitter-swift"
+generate = true
+
+[grammars.tree-sitter-toml]
+path = "./grammars/tree-sitter-toml"
+
+[grammars.tree-sitter-typescript]
+path     = "./grammars/tree-sitter-typescript"
+relative = "typescript"
+
+[grammars.tree-sitter-typescript-react]
+path     = "./grammars/tree-sitter-typescript"
+relative = "tsx"
+
+[grammars.tree-sitter-vue]
+path = "./grammars/tree-sitter-vue"
+
+[grammars.tree-sitter-wgsl]
+path = "./grammars/tree-sitter-wgsl"
+
+[grammars.tree-sitter-xml]
+path = "./grammars/tree-sitter-xml"
+
+[grammars.tree-sitter-yaml]
+path = "./grammars/tree-sitter-yaml"
+
+[grammars.tree-sitter-zig]
+path = "./grammars/tree-sitter-zig"

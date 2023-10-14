@@ -1,18 +1,38 @@
 use anyhow::{bail, Context, Result};
 use clap::Parser;
+use dunce::canonicalize;
+use serde::{Deserialize, Serialize};
 use std::{
+    fs::{self},
     path::{Path, PathBuf},
+    process::Command,
     time::SystemTime,
 };
-use tracing::{info, Level, error};
+use tracing::{debug, error, info, Level};
 use tracing_subscriber::FmtSubscriber;
 
 const BUILD_TARGET: &str = env!("BUILD_TARGET");
 
 #[derive(Parser)]
 struct Cli {
-    dir: PathBuf,
-    output: String,
+    dir: Option<PathBuf>,
+    #[clap(short, long)]
+    output: PathBuf,
+}
+
+#[non_exhaustive]
+#[derive(Debug, Deserialize, Serialize)]
+struct GrammarsFile {
+    grammars: std::collections::HashMap<String, GrammarBuildInfo>,
+}
+
+#[non_exhaustive]
+#[derive(Debug, Deserialize, Serialize)]
+struct GrammarBuildInfo {
+    path: PathBuf,
+    cpp: Option<bool>,
+    relative: Option<PathBuf>,
+    generate: Option<bool>,
 }
 
 fn logging() -> Result<()> {
@@ -23,42 +43,56 @@ fn logging() -> Result<()> {
     Ok(())
 }
 
-fn find(dir: &PathBuf) -> Result<Vec<PathBuf>> {
-    info!("Walking over {}", dir.display());
-
-    let mut paths = vec![];
-    for entry in walkdir::WalkDir::new(dir)
-        .follow_links(true)
-        .into_iter()
-        .filter_map(|e| e.ok())
-    {
-        let f_name = entry.file_name().to_string_lossy();
-
-        if f_name == "src" {
-            let path = entry.into_path().parent().unwrap().to_path_buf();
-            info!("Found {}", path.display());
-            paths.push(path);
-        }
-    }
-
-    Ok(paths)
-}
+const GRAMMARS_CONFIG: &str = "grammars.toml";
 
 fn main() -> Result<()> {
     logging()?;
 
     let cli = Cli::parse();
-    let grammars_dir = &cli.dir.canonicalize()?;
-    let output_dir = PathBuf::from(cli.output).canonicalize()?;
-    if !output_dir.exists() {
-        std::fs::create_dir_all(&output_dir)?;
-    }
 
-    let paths = find(grammars_dir)?;
-    for grammar_dir in paths {
-        let paths = TreeSitterPaths::new(grammar_dir.clone(), None);
-        match build_tree_sitter_library(&paths, &output_dir, grammar_dir.file_name().unwrap().to_str().unwrap()) {
-            Ok(_) => {},
+    if !cli.output.exists() {
+        if let Err(e) = std::fs::create_dir_all(&cli.output) {
+            error!("Failed to create output dir: {}", e);
+            bail!(e);
+        };
+    }
+    let output_dir = match canonicalize(&cli.output) {
+        Ok(v) => v,
+        Err(e) => {
+            bail!("Failed to canonicalize '{}': {e}", &cli.output.display());
+        }
+    };
+
+    let Ok(grammars_config) = canonicalize(PathBuf::from(GRAMMARS_CONFIG)) else {
+        error!("Failed to canonicalize grammars config");
+        bail!("Failed to canonicalize grammars config");
+    };
+    let Ok(grammars) = &fs::read_to_string(grammars_config) else {
+        error!("Failed to read grammars config");
+        bail!("Failed to read grammars config");
+    };
+    let Ok(config) = toml::from_str::<GrammarsFile>(grammars) else {
+        error!("Failed to deserialize config");
+        bail!("Failed to deserialize config");
+    };
+
+    for (name, grammar) in config.grammars {
+        info!("Building: {name}");
+        let grammar_path = match canonicalize(&grammar.path) {
+            Ok(v) => v,
+            Err(e) => {
+                error!("Failed to canonicalize '{}': {e}", grammar.path.display());
+                continue;
+            }
+        };
+        let paths = TreeSitterPaths::new(
+            grammar_path,
+            grammar.relative,
+            grammar.cpp,
+            grammar.generate,
+        );
+        match build_tree_sitter_library(&paths, &output_dir, &name) {
+            Ok(_) => {}
             Err(e) => {
                 error!("Failed to build grammar: {e}");
                 continue;
@@ -79,8 +113,6 @@ fn build_tree_sitter_library(paths: &TreeSitterPaths, output: &Path, name: &str)
     if !should_recompile {
         return Ok(false);
     }
-
-    info!("Building grammar {}", library_path.display());
 
     let cpp = if let Some(TreeSitterScannerSource { path: _, cpp }) = paths.scanner {
         cpp
@@ -128,7 +160,7 @@ fn build_tree_sitter_library(paths: &TreeSitterPaths, output: &Path, name: &str)
 
     // Compile the tree sitter library
     let command_str = format!("{command:?}");
-    info!("Running {command_str}");
+    debug!("Running {command_str}");
     let output = command
         .output()
         .with_context(|| format!("Failed to run C compiler. Command: {command_str}"))?;
@@ -155,9 +187,30 @@ struct TreeSitterPaths {
 }
 
 impl TreeSitterPaths {
-    fn new(repo: PathBuf, relative: Option<PathBuf>) -> Self {
+    fn new(
+        repo: PathBuf,
+        relative: Option<PathBuf>,
+        cpp: Option<bool>,
+        generate: Option<bool>,
+    ) -> Self {
+        let _cpp = if let Some(cpp) = cpp { cpp } else { false };
         // Resolve subpath within the repo if any
         let subpath = relative.map(|subpath| repo.join(subpath)).unwrap_or(repo);
+
+        if let Some(generate) = generate {
+            if generate {
+                match Command::new("tree-sitter")
+                    .args(["generate", "--abi", "latest", "grammar.js"])
+                    .current_dir(subpath.clone())
+                    .status()
+                {
+                    Ok(_) => {}
+                    Err(e) => {
+                        error!("Failed to generate parser: {e}");
+                    }
+                };
+            }
+        }
 
         // Source directory
         let source = subpath.join("src");
@@ -192,7 +245,6 @@ impl TreeSitterPaths {
     }
 
     fn should_recompile(&self, library_path: &Path) -> Result<bool> {
-        let mtime = |path| mtime(path).context("Failed to compare source and library timestamps");
         if !library_path.exists() {
             return Ok(true);
         };
@@ -212,5 +264,15 @@ impl TreeSitterPaths {
 }
 
 fn mtime(path: &Path) -> Result<SystemTime> {
-    Ok(std::fs::metadata(path)?.modified()?)
+    let meta = match std::fs::metadata(path) {
+        Ok(v) => v,
+        Err(e) => bail!("Failed to get metadata: {e}"),
+    };
+
+    let modified = match meta.modified() {
+        Ok(v) => v,
+        Err(e) => bail!("Failed to get modified time: {e}"),
+    };
+
+    Ok(modified)
 }
