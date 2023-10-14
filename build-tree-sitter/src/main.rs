@@ -43,7 +43,7 @@ fn logging() -> Result<()> {
     Ok(())
 }
 
-const GRAMMARS_CONFIG: &str = "grammars.toml";
+const GRAMMARS_CONFIG: &str = "config.toml";
 
 fn main() -> Result<()> {
     logging()?;
