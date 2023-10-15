@@ -35,6 +35,7 @@ jobs:
         run: |
           sudo apt-get -y update
           sudo apt-get -y install curl wget clang pkg-config
+          sudo update-alternatives --set cc /usr/bin/clang
 
       - name: Update rust
         run: rustup update
