@@ -1,0 +1,10 @@
+**.so
+**.log
+**.dll
+**.dylib
+**.exp
+**.lib
+**.obj
+
+/target
+/output

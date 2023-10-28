@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  schedule:
+    - cron: 0 0 */7 * *
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for release'
+        required: false
+        default: nightly
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+*"]
+  pull_request:
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows, ubuntu, macos]
+    env:
+      RELEASE_TAG_NAME: ${{ inputs.tag_name }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Install Ubuntu dependencies
+        if: matrix.os == 'ubuntu'
+        run: |
+          sudo apt-get -y update
+          sudo apt-get -y install curl wget clang pkg-config
+          sudo update-alternatives --set cc /usr/bin/clang
+
+      - name: Update rust
+        run: rustup update
+
+      - name: Fetch dependencies
+        run: |
+          cargo install --path ./build-tree-sitter --locked
+          cargo install tree-sitter-cli --locked
+
+      - name: Build grammars
+        if: always()
+        run: |
+            build-tree-sitter --output ./output
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: lapce-${{ matrix.os }}
+          path: |
+            ./output
+          retention-days: 1
