@@ -18,11 +18,19 @@ env:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ${{ matrix.runs-on }}
     strategy:
       fail-fast: false
       matrix:
-        os: [windows, ubuntu, macos]
+        include:
+          - runs-on: windows-latest
+            artefact: windows-x86_64
+          - runs-on: ubuntu-latest
+            artefact: linux-x86_64
+          - runs-on: macos-14
+            artefact: macos-x86_64
+          - runs-on: macos-13
+            artefact: macos-arm64
     env:
       RELEASE_TAG_NAME: ${{ inputs.tag_name }}
     steps:
@@ -53,7 +61,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: lapce-${{ matrix.os }}
+          name: lapce-${{ matrix.artefact }}
           path: |
             ./output
           retention-days: 1
