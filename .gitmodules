@@ -148,6 +148,3 @@
 [submodule "grammars/tree-sitter-zig"]
 	path = grammars/tree-sitter-zig
 	url = https://github.com/maxxnino/tree-sitter-zig.git
-[submodule "grammars/tree-sitter-slint"]
-	path = grammars/tree-sitter-slint
-	url = https://github.com/slint-ui/tree-sitter-slint.git

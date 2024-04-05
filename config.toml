@@ -135,9 +135,6 @@ path = "./grammars/tree-sitter-scheme"
 [grammars.tree-sitter-scss]
 path = "./grammars/tree-sitter-scss"
 
-[grammars.tree-sitter-slint]
-path = "./grammars/tree-sitter-slint"
-
 [grammars.tree-sitter-sql]
 path = "./grammars/tree-sitter-sql"
 
