@@ -159,8 +159,8 @@ relative = "typescript"
 path     = "./grammars/tree-sitter-typescript"
 relative = "tsx"
 
-[grammars.tree-sitter-vue]
-path = "./grammars/tree-sitter-vue"
+# [grammars.tree-sitter-vue]
+# path = "./grammars/tree-sitter-vue"
 
 [grammars.tree-sitter-wgsl]
 path = "./grammars/tree-sitter-wgsl"
