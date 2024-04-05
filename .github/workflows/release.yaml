@@ -28,9 +28,9 @@ jobs:
           - runs-on: ubuntu-latest
             artefact: linux-x86_64
           - runs-on: macos-14
-            artefact: macos-x86_64
-          - runs-on: macos-13
             artefact: macos-arm64
+          - runs-on: macos-13
+            artefact: macos-x86_64
     env:
       RELEASE_TAG_NAME: ${{ inputs.tag_name }}
     steps:
@@ -39,7 +39,7 @@ jobs:
           submodules: true
 
       - name: Install Ubuntu dependencies
-        if: matrix.os == 'ubuntu'
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get -y update
           sudo apt-get -y install curl wget clang pkg-config

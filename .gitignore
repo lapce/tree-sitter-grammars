@@ -6,5 +6,6 @@
 **.lib
 **.obj
 
-/target
+**/target
 /output
+/build

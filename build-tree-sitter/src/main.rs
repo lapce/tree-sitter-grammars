@@ -1,12 +1,12 @@
 use anyhow::{bail, Context, Result};
 use clap::Parser;
 use dunce::canonicalize;
+use itertools::Itertools;
 use serde::{Deserialize, Serialize};
 use std::{
     fs::{self},
     path::{Path, PathBuf},
     process::Command,
-    time::SystemTime,
 };
 use tracing::{debug, error, info, Level};
 use tracing_subscriber::FmtSubscriber;
@@ -15,7 +15,6 @@ const BUILD_TARGET: &str = env!("BUILD_TARGET");
 
 #[derive(Parser)]
 struct Cli {
-    dir: Option<PathBuf>,
     #[clap(short, long)]
     output: PathBuf,
 }
@@ -27,12 +26,30 @@ struct GrammarsFile {
 }
 
 #[non_exhaustive]
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 struct GrammarBuildInfo {
     path: PathBuf,
-    cpp: Option<bool>,
+    src: Option<PathBuf>,
     relative: Option<PathBuf>,
     generate: Option<bool>,
+    parser: ParserBuildInfo,
+    scanner: ScannerBuildInfo,
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, Deserialize, Serialize)]
+struct ParserBuildInfo {
+    path: PathBuf,
+    cpp: bool,
+    flags: Vec<String>,
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, Deserialize, Serialize)]
+struct ScannerBuildInfo {
+    path: PathBuf,
+    cpp: bool,
+    flags: Vec<String>,
 }
 
 fn logging() -> Result<()> {
@@ -56,6 +73,7 @@ fn main() -> Result<()> {
             bail!(e);
         };
     }
+
     let output_dir = match canonicalize(&cli.output) {
         Ok(v) => v,
         Err(e) => {
@@ -71,91 +89,195 @@ fn main() -> Result<()> {
         error!("Failed to read grammars config");
         bail!("Failed to read grammars config");
     };
-    let Ok(config) = toml::from_str::<GrammarsFile>(grammars) else {
-        error!("Failed to deserialize config");
-        bail!("Failed to deserialize config");
-    };
+    let config = toml::from_str::<GrammarsFile>(grammars)?;
 
-    for (name, grammar) in config.grammars {
+    let cwd = std::env::current_dir()?;
+
+    let build_dir = Path::new("./build");
+    _ = std::fs::create_dir(build_dir);
+    let build_dir = canonicalize(build_dir)?;
+
+    for name in config.grammars.keys().sorted() {
         info!("Building: {name}");
-        let grammar_path = match canonicalize(&grammar.path) {
-            Ok(v) => v,
-            Err(e) => {
-                error!("Failed to canonicalize '{}': {e}", grammar.path.display());
-                continue;
-            }
-        };
-        let paths = TreeSitterPaths::new(
-            grammar_path,
-            grammar.relative,
-            grammar.cpp,
-            grammar.generate,
-        );
-        match build_tree_sitter_library(&paths, &output_dir, &name) {
+
+        match build_tree_sitter_library(
+            &build_dir,
+            &output_dir,
+            name,
+            config.grammars[name].clone(),
+        ) {
             Ok(_) => {}
             Err(e) => {
-                error!("Failed to build grammar: {e}");
+                error!("Failed to build grammar '{name}': {e}");
+                std::env::set_current_dir(cwd.clone())?;
                 continue;
             }
         };
+
+        std::env::set_current_dir(cwd.clone())?;
     }
 
     Ok(())
 }
 
-fn build_tree_sitter_library(paths: &TreeSitterPaths, output: &Path, name: &str) -> Result<bool> {
-    let mut library_path = output.join(name);
-    library_path.set_extension(std::env::consts::DLL_EXTENSION);
-    info!("Build object: {}", library_path.display());
-
-    let should_recompile = paths.should_recompile(&library_path)?;
-
-    if !should_recompile {
-        return Ok(false);
-    }
-
-    let cpp = if let Some(TreeSitterScannerSource { path: _, cpp }) = paths.scanner {
-        cpp
-    } else {
-        false
+fn build_tree_sitter_library(
+    build_dir: &Path,
+    output: &Path,
+    name: &str,
+    gbi: GrammarBuildInfo,
+) -> Result<bool> {
+    let path = match canonicalize(gbi.path.clone()) {
+        Ok(v) => v,
+        Err(e) => bail!("Failed to canonicalize: {e}"),
     };
 
+    let path = gbi
+        .clone()
+        .relative
+        .clone()
+        .map(|subpath| path.join(subpath))
+        .unwrap_or(path);
+
+    match std::env::set_current_dir(path.clone()) {
+        Ok(_) => {}
+        Err(e) => bail!("Failed to set_current_dir: {e}"),
+    };
+
+    info!(
+        "Current dir: {}",
+        match std::env::current_dir() {
+            Ok(v) => v,
+            Err(e) => bail!("Failed to set_current_dir: {e}"),
+        }
+        .display()
+    );
+
+    let library_path = build_dir.join(name);
+    // library_path.set_extension(std::env::consts::DLL_EXTENSION);
+    _ = std::fs::create_dir_all(library_path.clone());
+    info!("Build object: {}", library_path.display());
+
+    if gbi.generate.unwrap_or_default() {
+        match Command::new("tree-sitter")
+            .args(["generate", "--abi", "latest", "grammar.js"])
+            .status()
+        {
+            Ok(_) => {}
+            Err(e) => {
+                bail!("Failed to generate parser: {e}");
+            }
+        };
+    }
+
+    let src = path.join(gbi.clone().src.unwrap_or("src".into()));
+    std::env::set_current_dir(src.clone())?;
+
+    // Scanner
+
+    if gbi.scanner.path.exists() {
+        let mut compiler = cc::Build::new();
+
+        compiler
+            .include(std::env::current_dir()?)
+            .opt_level(3)
+            .warnings(true)
+            .cargo_metadata(false)
+            .cargo_warnings(true)
+            .cargo_debug(true)
+            .cpp(gbi.parser.cpp)
+            .host(BUILD_TARGET)
+            .target(BUILD_TARGET)
+            .out_dir(library_path.clone());
+
+        compiler
+            .flag_if_supported("-Wno-unused-parameter")
+            .flag_if_supported("-Wno-unused-but-set-variable");
+
+        for flag in gbi.scanner.flags.clone() {
+            compiler.flag_if_supported(&flag);
+        }
+
+        compiler.shared_flag(false).static_flag(false);
+
+        let scanner_path = src.join(gbi.scanner.path.clone());
+        compiler.file(scanner_path);
+
+        #[allow(clippy::useless_format)]
+        compile(
+            &mut compiler,
+            format!("{}", library_path.clone().join("scanner.o").display()),
+        )?;
+    }
+
+    // Parser
+
     let mut compiler = cc::Build::new();
+
     compiler
-        .cpp(cpp)
-        .warnings(false)
-        .include(&paths.source)
+        .include(std::env::current_dir()?)
         .opt_level(3)
+        .warnings(true)
         .cargo_metadata(false)
-        .shared_flag(true)
+        .cargo_warnings(true)
+        .cargo_debug(true)
+        .cpp(gbi.parser.cpp)
         .host(BUILD_TARGET)
         .target(BUILD_TARGET);
 
+    if library_path.clone().join("scanner.o").exists() {
+        compiler.object(library_path.clone().join("scanner.o"));
+    }
+
+    compiler
+        .flag_if_supported("-Wno-unused-parameter")
+        .flag_if_supported("-Wno-unused-but-set-variable")
+        .flag_if_supported("-Wno-trigraphs");
+
+    compiler.std("c11");
+
+    for flag in gbi.parser.flags.clone() {
+        compiler.flag_if_supported(&flag);
+    }
+
+    compiler.shared_flag(true).static_flag(false);
+
+    if !std::env::var("GITHUB_CI").unwrap_or_default().is_empty() {
+        println!("::group::Build {name}");
+    }
+
+    let parser_path = src.join(gbi.parser.path.clone());
+    compiler.file(parser_path);
+
+    if !std::env::var("GITHUB_CI").unwrap_or_default().is_empty() {
+        println!("::endgroup::");
+    }
+
+    let mut out_lib = output.join(format!("lib{name}"));
+    out_lib.set_extension(std::env::consts::DLL_EXTENSION);
+    compile(&mut compiler, out_lib.display().to_string())?;
+
+    Ok(true)
+}
+
+fn compile(compiler: &mut cc::Build, out: String) -> Result<()> {
     let mut command = compiler.try_get_compiler()?.to_command();
-    command.arg(&paths.parser);
-    if cfg!(windows) {
-        if let Some(TreeSitterScannerSource { ref path, .. }) = paths.scanner {
-            command.arg(path);
-        }
+
+    #[cfg(windows)]
+    {
         command.arg("/link");
         command.arg("/DLL");
-        command.arg(format!("/out:{}", library_path.to_str().unwrap()));
-    } else {
-        // command.arg(&paths.parser);
-        command
-            .arg("-fPIC")
-            .arg("-fno-exceptions")
-            .arg("-g")
-            .arg("-o")
-            .arg(&library_path);
-        if let Some(TreeSitterScannerSource { ref path, cpp }) = paths.scanner {
-            if cpp {
-                command.arg("-xc++");
-            } else {
-                command.arg("-xc").arg("-std=c99");
-            }
-            command.arg(path);
-        }
+        command.arg(format!("/out:{out}"));
+    }
+
+    #[cfg(not(windows))]
+    {
+        command.arg("-fno-exceptions").arg("-g").arg("-o").arg(out);
+    }
+
+    command.arg("-c");
+
+    for file in compiler.get_files() {
+        command.arg(file.as_os_str());
     }
 
     // Compile the tree sitter library
@@ -172,107 +294,5 @@ fn build_tree_sitter_library(paths: &TreeSitterPaths, output: &Path, name: &str)
         );
     }
 
-    Ok(true)
-}
-
-struct TreeSitterScannerSource {
-    path: PathBuf,
-    cpp: bool,
-}
-
-struct TreeSitterPaths {
-    source: PathBuf,
-    parser: PathBuf,
-    scanner: Option<TreeSitterScannerSource>,
-}
-
-impl TreeSitterPaths {
-    fn new(
-        repo: PathBuf,
-        relative: Option<PathBuf>,
-        cpp: Option<bool>,
-        generate: Option<bool>,
-    ) -> Self {
-        let _cpp = if let Some(cpp) = cpp { cpp } else { false };
-        // Resolve subpath within the repo if any
-        let subpath = relative.map(|subpath| repo.join(subpath)).unwrap_or(repo);
-
-        if let Some(generate) = generate {
-            if generate {
-                match Command::new("tree-sitter")
-                    .args(["generate", "--abi", "latest", "grammar.js"])
-                    .current_dir(subpath.clone())
-                    .status()
-                {
-                    Ok(_) => {}
-                    Err(e) => {
-                        error!("Failed to generate parser: {e}");
-                    }
-                };
-            }
-        }
-
-        // Source directory
-        let source = subpath.join("src");
-
-        // Path to parser source
-        let parser = source.join("parser.c");
-
-        // Path to scanner if any
-        let mut scanner_path = source.join("scanner.c");
-        let scanner = if scanner_path.exists() {
-            Some(TreeSitterScannerSource {
-                path: scanner_path,
-                cpp: false,
-            })
-        } else {
-            scanner_path.set_extension("cc");
-            if scanner_path.exists() {
-                Some(TreeSitterScannerSource {
-                    path: scanner_path,
-                    cpp: true,
-                })
-            } else {
-                None
-            }
-        };
-
-        Self {
-            source,
-            parser,
-            scanner,
-        }
-    }
-
-    fn should_recompile(&self, library_path: &Path) -> Result<bool> {
-        if !library_path.exists() {
-            return Ok(true);
-        };
-
-        let library_mtime = mtime(library_path)?;
-        if mtime(&self.parser)? > library_mtime {
-            return Ok(true);
-        }
-
-        if let Some(TreeSitterScannerSource { ref path, .. }) = self.scanner {
-            if mtime(path)? > library_mtime {
-                return Ok(true);
-            }
-        }
-        Ok(false)
-    }
-}
-
-fn mtime(path: &Path) -> Result<SystemTime> {
-    let meta = match std::fs::metadata(path) {
-        Ok(v) => v,
-        Err(e) => bail!("Failed to get metadata: {e}"),
-    };
-
-    let modified = match meta.modified() {
-        Ok(v) => v,
-        Err(e) => bail!("Failed to get modified time: {e}"),
-    };
-
-    Ok(modified)
+    Ok(())
 }
