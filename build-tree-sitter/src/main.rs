@@ -93,7 +93,7 @@ fn main() -> Result<()> {
 
     let cwd = std::env::current_dir()?;
 
-    let build_dir = Path::new("./build");
+    let build_dir = Path::new("./tmp");
     _ = std::fs::create_dir(build_dir);
     let build_dir = canonicalize(build_dir)?;
 
@@ -126,6 +126,13 @@ fn build_tree_sitter_library(
     name: &str,
     gbi: GrammarBuildInfo,
 ) -> Result<bool> {
+    if !std::env::var("GITHUB_ACTIONS")
+        .unwrap_or_default()
+        .is_empty()
+    {
+        println!("::group::Build {name}");
+    }
+
     let path = match canonicalize(gbi.path.clone()) {
         Ok(v) => v,
         Err(e) => bail!("Failed to canonicalize: {e}"),
@@ -227,7 +234,8 @@ fn build_tree_sitter_library(
     compiler
         .flag_if_supported("-Wno-unused-parameter")
         .flag_if_supported("-Wno-unused-but-set-variable")
-        .flag_if_supported("-Wno-trigraphs");
+        .flag_if_supported("-Wno-trigraphs")
+        .flag("-c");
 
     compiler.std("c11");
 
@@ -237,10 +245,6 @@ fn build_tree_sitter_library(
 
     compiler.shared_flag(true).static_flag(false);
 
-    if !std::env::var("GITHUB_ACTIONS").unwrap_or_default().is_empty() {
-        println!("::group::Build {name}");
-    }
-
     let parser_path = src.join(gbi.parser.path.clone());
     compiler.file(parser_path);
 
@@ -248,13 +252,16 @@ fn build_tree_sitter_library(
         compiler.file(library_path.clone().join("scanner.o"));
     }
 
-    if !std::env::var("GITHUB_ACTIONS").unwrap_or_default().is_empty() {
-        println!("::endgroup::");
-    }
-
     let mut out_lib = output.join(format!("lib{name}"));
     out_lib.set_extension(std::env::consts::DLL_EXTENSION);
     compile(&mut compiler, out_lib.display().to_string())?;
+
+    if !std::env::var("GITHUB_ACTIONS")
+        .unwrap_or_default()
+        .is_empty()
+    {
+        println!("::endgroup::");
+    }
 
     Ok(true)
 }
@@ -266,8 +273,14 @@ fn compile(compiler: &mut cc::Build, out: String) -> Result<()> {
         command.arg(file.as_os_str());
     }
 
+    command.arg("-c");
+
     #[cfg(windows)]
     {
+        for file in compiler.get_files() {
+            command.arg(file.as_os_str());
+        }
+
         command.arg("/link");
         command.arg("/DLL");
         command.arg(format!("/out:{out}"));
@@ -275,7 +288,10 @@ fn compile(compiler: &mut cc::Build, out: String) -> Result<()> {
 
     #[cfg(not(windows))]
     {
-        command.arg("-fno-exceptions").arg("-g").arg("-o").arg(out);
+        command.arg("-fno-exceptions");
+        command.arg("-g");
+        command.arg("-o");
+        command.arg(out);
     }
 
     // Compile the tree sitter library
