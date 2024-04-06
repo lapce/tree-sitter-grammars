@@ -224,10 +224,6 @@ fn build_tree_sitter_library(
         .host(BUILD_TARGET)
         .target(BUILD_TARGET);
 
-    if library_path.clone().join("scanner.o").exists() {
-        compiler.object(library_path.clone().join("scanner.o"));
-    }
-
     compiler
         .flag_if_supported("-Wno-unused-parameter")
         .flag_if_supported("-Wno-unused-but-set-variable")
@@ -241,14 +237,18 @@ fn build_tree_sitter_library(
 
     compiler.shared_flag(true).static_flag(false);
 
-    if !std::env::var("GITHUB_CI").unwrap_or_default().is_empty() {
+    if !std::env::var("GITHUB_ACTIONS").unwrap_or_default().is_empty() {
         println!("::group::Build {name}");
     }
 
     let parser_path = src.join(gbi.parser.path.clone());
     compiler.file(parser_path);
 
-    if !std::env::var("GITHUB_CI").unwrap_or_default().is_empty() {
+    if library_path.clone().join("scanner.o").exists() {
+        compiler.file(library_path.clone().join("scanner.o"));
+    }
+
+    if !std::env::var("GITHUB_ACTIONS").unwrap_or_default().is_empty() {
         println!("::endgroup::");
     }
 
@@ -262,6 +262,10 @@ fn build_tree_sitter_library(
 fn compile(compiler: &mut cc::Build, out: String) -> Result<()> {
     let mut command = compiler.try_get_compiler()?.to_command();
 
+    for file in compiler.get_files() {
+        command.arg(file.as_os_str());
+    }
+
     #[cfg(windows)]
     {
         command.arg("/link");
@@ -272,12 +276,6 @@ fn compile(compiler: &mut cc::Build, out: String) -> Result<()> {
     #[cfg(not(windows))]
     {
         command.arg("-fno-exceptions").arg("-g").arg("-o").arg(out);
-    }
-
-    command.arg("-c");
-
-    for file in compiler.get_files() {
-        command.arg(file.as_os_str());
     }
 
     // Compile the tree sitter library
