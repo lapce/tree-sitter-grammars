@@ -58,6 +58,10 @@ jobs:
         run: |
             build-tree-sitter --output ./output
 
+      - name: Capture directory output
+        if: runner.os == 'windows'
+        run: gci -recurse
+
       - uses: actions/upload-artifact@v3
         if: always()
         with:
@@ -65,3 +69,4 @@ jobs:
           path: |
             ./output
           retention-days: 1
+          if-no-files-found: error
