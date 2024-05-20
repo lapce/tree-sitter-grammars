@@ -10,7 +10,7 @@ anyhow = { version = "1.0" }
 cc = { version = "1.0" }
 clap = { version = "4.5.1", features = [ "derive", "std", "help" ], default-features = false }
 dunce = { version = "1.0.4" }
-itertools = "0.12.1"
+itertools = "0.13.0"
 serde = { version = "1.0.197", features = ["derive"] }
 toml = { version = "0.8.12" }
 tracing = { version = "0.1.40" }
