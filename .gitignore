@@ -9,3 +9,6 @@
 **/target
 /output
 /tmp
+
+/.vscode
+/.lapce

@@ -1,8 +1,6 @@
 name: Release
 
 on:
-  schedule:
-    - cron: 0 0 */7 * *
   workflow_dispatch:
     inputs:
       tag_name:
@@ -10,7 +8,6 @@ on:
         required: false
         default: nightly
   push:
-    tags: ["v[0-9]+.[0-9]+.[0-9]+*"]
   pull_request:
 
 env:
@@ -25,10 +22,13 @@ jobs:
         include:
           - runs-on: windows-latest
             artefact: windows-x86_64
+
           - runs-on: ubuntu-latest
             artefact: linux-x86_64
+
           - runs-on: macos-14
             artefact: macos-arm64
+
           - runs-on: macos-13
             artefact: macos-x86_64
     env:
@@ -48,20 +48,17 @@ jobs:
       - name: Update rust
         run: rustup update
 
-      - name: Fetch dependencies
-        run: |
-          cargo install --path ./build-tree-sitter --locked
-          cargo install tree-sitter-cli --locked
+      - name: Install Tree-Sitter CLI
+        run: cargo install tree-sitter-cli@^0.20 --locked
 
       - name: Build grammars
         if: always()
-        run: |
-            build-tree-sitter --output ./output
+        run: ./make.sh
 
       - uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: lapce-${{ matrix.artefact }}
+          name: ${{ matrix.artefact }}
           path: |
             ./output
           retention-days: 1

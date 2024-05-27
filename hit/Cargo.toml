@@ -1,0 +1,10 @@
+[package]
+name        = "hit"
+description = "helper (g)it"
+edition     = { workspace = true }
+
+[dependencies]
+anyhow   = { workspace = true }
+git2     = { workspace = true }
+indexmap = { workspace = true }
+url      = { workspace = true }
