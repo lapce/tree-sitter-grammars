@@ -1,0 +1,5 @@
+max_width = 85
+# below requires nightly
+imports_granularity = "Crate"
+group_imports       = "StdExternalCrate"
+reorder_impl_items  = true

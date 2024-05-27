@@ -1,0 +1,722 @@
+[submodule "grammars/tree-sitter-ada"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-ada"
+	url = "git@github.com:briot/tree-sitter-ada.git"
+	url = "git@github.com:panekj/tree-sitter-ada.git"
+
+[submodule "grammars/tree-sitter-adl"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-adl"
+	url = "git@github.com:adl-lang/tree-sitter-adl.git"
+	url = "git@github.com:panekj/tree-sitter-adl.git"
+
+[submodule "grammars/tree-sitter-agda"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-agda"
+	url = "git@github.com:tree-sitter/tree-sitter-agda.git"
+	url = "git@github.com:panekj/tree-sitter-agda.git"
+
+[submodule "grammars/tree-sitter-angular"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-angular"
+	url = "git@github.com:steelsojka/tree-sitter-angular.git"
+	url = "git@github.com:panekj/tree-sitter-angular.git"
+
+[submodule "grammars/tree-sitter-astro"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-astro"
+	url = "git@github.com:virchau13/tree-sitter-astro.git"
+	url = "git@github.com:panekj/tree-sitter-astro.git"
+
+[submodule "grammars/tree-sitter-bash"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-bash"
+	url = "git@github.com:tree-sitter/tree-sitter-bash.git"
+	url = "git@github.com:panekj/tree-sitter-bash.git"
+
+[submodule "grammars/tree-sitter-bass"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-bass"
+	url = "git@github.com:vito/tree-sitter-bass.git"
+	url = "git@github.com:panekj/tree-sitter-bass.git"
+
+[submodule "grammars/tree-sitter-beancount"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-beancount"
+	url = "git@github.com:polarmutex/tree-sitter-beancount.git"
+	url = "git@github.com:panekj/tree-sitter-beancount.git"
+
+[submodule "grammars/tree-sitter-bibtex"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-bibtex"
+	url = "git@github.com:latex-lsp/tree-sitter-bibtex.git"
+	url = "git@github.com:panekj/tree-sitter-bibtex.git"
+
+[submodule "grammars/tree-sitter-bitbake"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-bitbake"
+	url = "git@github.com:tree-sitter-grammars/tree-sitter-bitbake.git"
+	url = "git@github.com:panekj/tree-sitter-bitbake.git"
+
+[submodule "grammars/tree-sitter-blade"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-blade"
+	url = "git@github.com:EmranMR/tree-sitter-blade.git"
+	url = "git@github.com:panekj/tree-sitter-blade.git"
+
+[submodule "grammars/tree-sitter-c"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-c"
+	url = "git@github.com:tree-sitter/tree-sitter-c.git"
+	url = "git@github.com:panekj/tree-sitter-c.git"
+
+[submodule "grammars/tree-sitter-c-sharp"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-c-sharp"
+	url = "git@github.com:tree-sitter/tree-sitter-c-sharp.git"
+	url = "git@github.com:panekj/tree-sitter-c-sharp.git"
+
+[submodule "grammars/tree-sitter-clojure"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-clojure"
+	url = "git@github.com:sogaiu/tree-sitter-clojure.git"
+	url = "git@github.com:panekj/tree-sitter-clojure.git"
+
+[submodule "grammars/tree-sitter-cmake"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-cmake"
+	url = "git@github.com:uyha/tree-sitter-cmake.git"
+	url = "git@github.com:panekj/tree-sitter-cmake.git"
+
+[submodule "grammars/tree-sitter-comment"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-comment"
+	url = "git@github.com:stsewd/tree-sitter-comment.git"
+	url = "git@github.com:panekj/tree-sitter-comment.git"
+
+[submodule "grammars/tree-sitter-cpp"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-cpp"
+	url = "git@github.com:tree-sitter/tree-sitter-cpp.git"
+	url = "git@github.com:panekj/tree-sitter-cpp.git"
+
+[submodule "grammars/tree-sitter-css"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-css"
+	url = "git@github.com:tree-sitter/tree-sitter-css.git"
+	url = "git@github.com:panekj/tree-sitter-css.git"
+
+[submodule "grammars/tree-sitter-cue"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-cue"
+	url = "git@github.com:eonpatapon/tree-sitter-cue.git"
+	url = "git@github.com:panekj/tree-sitter-cue.git"
+
+[submodule "grammars/tree-sitter-d"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-d"
+	url = "git@github.com:gdamore/tree-sitter-d.git"
+	url = "git@github.com:panekj/tree-sitter-d.git"
+
+[submodule "grammars/tree-sitter-dart"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-dart"
+	url = "git@github.com:UserNobody14/tree-sitter-dart.git"
+	url = "git@github.com:panekj/tree-sitter-dart.git"
+
+[submodule "grammars/tree-sitter-dhall"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-dhall"
+	url = "git@github.com:jbellerb/tree-sitter-dhall.git"
+	url = "git@github.com:panekj/tree-sitter-dhall.git"
+
+[submodule "grammars/tree-sitter-diff"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-diff"
+	url = "git@github.com:the-mikedavis/tree-sitter-diff.git"
+	url = "git@github.com:panekj/tree-sitter-diff.git"
+
+[submodule "grammars/tree-sitter-dockerfile"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-dockerfile"
+	url = "git@github.com:camdencheek/tree-sitter-dockerfile.git"
+	url = "git@github.com:panekj/tree-sitter-dockerfile.git"
+
+[submodule "grammars/tree-sitter-dot"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-dot"
+	url = "git@github.com:rydesun/tree-sitter-dot.git"
+	url = "git@github.com:panekj/tree-sitter-dot.git"
+
+[submodule "grammars/tree-sitter-elixir"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-elixir"
+	url = "git@github.com:elixir-lang/tree-sitter-elixir.git"
+	url = "git@github.com:panekj/tree-sitter-elixir.git"
+
+[submodule "grammars/tree-sitter-elm"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-elm"
+	url = "git@github.com:elm-tooling/tree-sitter-elm.git"
+	url = "git@github.com:panekj/tree-sitter-elm.git"
+
+[submodule "grammars/tree-sitter-erlang"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-erlang"
+	url = "git@github.com:WhatsApp/tree-sitter-erlang.git"
+	url = "git@github.com:panekj/tree-sitter-erlang.git"
+
+[submodule "grammars/tree-sitter-f-sharp"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-f-sharp"
+	url = "git@github.com:ionide/tree-sitter-f-sharp.git"
+	url = "git@github.com:panekj/tree-sitter-f-sharp.git"
+
+[submodule "grammars/tree-sitter-fish"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-fish"
+	url = "git@github.com:ram02z/tree-sitter-fish.git"
+	url = "git@github.com:panekj/tree-sitter-fish.git"
+
+[submodule "grammars/tree-sitter-fluent"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-fluent"
+	url = "git@github.com:tree-sitter/tree-sitter-fluent.git"
+	url = "git@github.com:panekj/tree-sitter-fluent.git"
+
+[submodule "grammars/tree-sitter-forth"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-forth"
+	url = "git@github.com:AlexanderBrevig/tree-sitter-forth.git"
+	url = "git@github.com:panekj/tree-sitter-forth.git"
+
+[submodule "grammars/tree-sitter-fortran"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-fortran"
+	url = "git@github.com:stadelmanma/tree-sitter-fortran.git"
+	url = "git@github.com:panekj/tree-sitter-fortran.git"
+
+[submodule "grammars/tree-sitter-git-commit"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-git-commit"
+	url = "git@github.com:the-mikedavis/tree-sitter-git-commit.git"
+	url = "git@github.com:panekj/tree-sitter-git-commit.git"
+
+[submodule "grammars/tree-sitter-git-config"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-git-config"
+	url = "git@github.com:the-mikedavis/tree-sitter-git-config.git"
+	url = "git@github.com:panekj/tree-sitter-git-config.git"
+
+[submodule "grammars/tree-sitter-git-rebase"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-git-rebase"
+	url = "git@github.com:the-mikedavis/tree-sitter-git-rebase.git"
+	url = "git@github.com:panekj/tree-sitter-git-rebase.git"
+
+[submodule "grammars/tree-sitter-gitattributes"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-gitattributes"
+	url = "git@github.com:mtoohey31/tree-sitter-gitattributes.git"
+	url = "git@github.com:panekj/tree-sitter-gitattributes.git"
+
+[submodule "grammars/tree-sitter-gleam"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-gleam"
+	url = "git@github.com:gleam-lang/tree-sitter-gleam.git"
+	url = "git@github.com:panekj/tree-sitter-gleam.git"
+
+[submodule "grammars/tree-sitter-glimmer"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-glimmer"
+	url = "git@github.com:ember-tooling/tree-sitter-glimmer.git"
+	url = "git@github.com:panekj/tree-sitter-glimmer.git"
+
+[submodule "grammars/tree-sitter-glsl"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-glsl"
+	url = "git@github.com:tree-sitter-grammars/tree-sitter-glsl.git"
+	url = "git@github.com:panekj/tree-sitter-glsl.git"
+
+[submodule "grammars/tree-sitter-gn"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-gn"
+	url = "git@github.com:willcassella/tree-sitter-gn.git"
+	url = "git@github.com:panekj/tree-sitter-gn.git"
+
+[submodule "grammars/tree-sitter-go"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-go"
+	url = "git@github.com:tree-sitter/tree-sitter-go.git"
+	url = "git@github.com:panekj/tree-sitter-go.git"
+
+[submodule "grammars/tree-sitter-go-mod"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-go-mod"
+	url = "git@github.com:camdencheek/tree-sitter-go-mod.git"
+	url = "git@github.com:panekj/tree-sitter-go-mod.git"
+
+[submodule "grammars/tree-sitter-go-template"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-go-template"
+	url = "git@github.com:ngalaiko/tree-sitter-go-template.git"
+	url = "git@github.com:panekj/tree-sitter-go-template.git"
+
+[submodule "grammars/tree-sitter-go-work"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-go-work"
+	url = "git@github.com:omertuc/tree-sitter-go-work.git"
+	url = "git@github.com:panekj/tree-sitter-go-work.git"
+
+[submodule "grammars/tree-sitter-graphql"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-graphql"
+	url = "git@github.com:bkegley/tree-sitter-graphql.git"
+	url = "git@github.com:panekj/tree-sitter-graphql.git"
+
+[submodule "grammars/tree-sitter-groovy"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-groovy"
+	url = "git@github.com:murtaza64/tree-sitter-groovy.git"
+	url = "git@github.com:panekj/tree-sitter-groovy.git"
+
+[submodule "grammars/tree-sitter-haskell"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-haskell"
+	url = "git@github.com:tree-sitter/tree-sitter-haskell.git"
+	url = "git@github.com:panekj/tree-sitter-haskell.git"
+
+[submodule "grammars/tree-sitter-haxe"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-haxe"
+	url = "git@github.com:vantreeseba/tree-sitter-haxe.git"
+	url = "git@github.com:panekj/tree-sitter-haxe.git"
+
+[submodule "grammars/tree-sitter-hcl"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-hcl"
+	url = "git@github.com:tree-sitter-grammars/tree-sitter-hcl.git"
+	url = "git@github.com:panekj/tree-sitter-hcl.git"
+
+[submodule "grammars/tree-sitter-hosts"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-hosts"
+	url = "git@github.com:ath3/tree-sitter-hosts.git"
+	url = "git@github.com:panekj/tree-sitter-hosts.git"
+
+[submodule "grammars/tree-sitter-html"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-html"
+	url = "git@github.com:tree-sitter/tree-sitter-html.git"
+	url = "git@github.com:panekj/tree-sitter-html.git"
+
+[submodule "grammars/tree-sitter-ini"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-ini"
+	url = "git@github.com:justinmk/tree-sitter-ini.git"
+	url = "git@github.com:panekj/tree-sitter-ini.git"
+
+[submodule "grammars/tree-sitter-java"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-java"
+	url = "git@github.com:tree-sitter/tree-sitter-java.git"
+	url = "git@github.com:panekj/tree-sitter-java.git"
+
+[submodule "grammars/tree-sitter-javascript"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-javascript"
+	url = "git@github.com:tree-sitter/tree-sitter-javascript.git"
+	url = "git@github.com:panekj/tree-sitter-javascript.git"
+
+[submodule "grammars/tree-sitter-jsdoc"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-jsdoc"
+	url = "git@github.com:tree-sitter/tree-sitter-jsdoc.git"
+	url = "git@github.com:panekj/tree-sitter-jsdoc.git"
+
+[submodule "grammars/tree-sitter-json"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-json"
+	url = "git@github.com:tree-sitter/tree-sitter-json.git"
+	url = "git@github.com:panekj/tree-sitter-json.git"
+
+[submodule "grammars/tree-sitter-json5"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-json5"
+	url = "git@github.com:Joakker/tree-sitter-json5.git"
+	url = "git@github.com:panekj/tree-sitter-json5.git"
+
+[submodule "grammars/tree-sitter-jsonnet"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-jsonnet"
+	url = "git@github.com:sourcegraph/tree-sitter-jsonnet.git"
+	url = "git@github.com:panekj/tree-sitter-jsonnet.git"
+
+[submodule "grammars/tree-sitter-julia"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-julia"
+	url = "git@github.com:tree-sitter/tree-sitter-julia.git"
+	url = "git@github.com:panekj/tree-sitter-julia.git"
+
+[submodule "grammars/tree-sitter-just"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-just"
+	url = "git@github.com:IndianBoy42/tree-sitter-just.git"
+	url = "git@github.com:panekj/tree-sitter-just.git"
+
+[submodule "grammars/tree-sitter-kdl"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-kdl"
+	url = "git@github.com:tree-sitter-grammars/tree-sitter-kdl.git"
+	url = "git@github.com:panekj/tree-sitter-kdl.git"
+
+[submodule "grammars/tree-sitter-kotlin"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-kotlin"
+	url = "git@github.com:fwcd/tree-sitter-kotlin.git"
+	url = "git@github.com:panekj/tree-sitter-kotlin.git"
+
+[submodule "grammars/tree-sitter-latex"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-latex"
+	url = "git@github.com:latex-lsp/tree-sitter-latex.git"
+	url = "git@github.com:panekj/tree-sitter-latex.git"
+
+[submodule "grammars/tree-sitter-ld"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-ld"
+	url = "git@github.com:mtoohey31/tree-sitter-ld.git"
+	url = "git@github.com:panekj/tree-sitter-ld.git"
+
+[submodule "grammars/tree-sitter-llvm"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-llvm"
+	url = "git@github.com:benwilliamgraham/tree-sitter-llvm.git"
+	url = "git@github.com:panekj/tree-sitter-llvm.git"
+
+[submodule "grammars/tree-sitter-llvm-mir"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-llvm-mir"
+	url = "git@github.com:Flakebi/tree-sitter-llvm-mir.git"
+	url = "git@github.com:panekj/tree-sitter-llvm-mir.git"
+
+[submodule "grammars/tree-sitter-log"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-log"
+	url = "git@github.com:Tudyx/tree-sitter-log.git"
+	url = "git@github.com:panekj/tree-sitter-log.git"
+
+[submodule "grammars/tree-sitter-lua"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-lua"
+	url = "git@github.com:tree-sitter-grammars/tree-sitter-lua.git"
+	url = "git@github.com:panekj/tree-sitter-lua.git"
+
+[submodule "grammars/tree-sitter-make"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-make"
+	url = "git@github.com:alemuller/tree-sitter-make.git"
+	url = "git@github.com:panekj/tree-sitter-make.git"
+
+[submodule "grammars/tree-sitter-markdown"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-markdown"
+	url = "git@github.com:tree-sitter-grammars/tree-sitter-markdown.git"
+	url = "git@github.com:panekj/tree-sitter-markdown.git"
+
+[submodule "grammars/tree-sitter-meson"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-meson"
+	url = "git@github.com:staysail/tree-sitter-meson.git"
+	url = "git@github.com:panekj/tree-sitter-meson.git"
+
+[submodule "grammars/tree-sitter-nasm"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-nasm"
+	url = "git@github.com:naclsn/tree-sitter-nasm.git"
+	url = "git@github.com:panekj/tree-sitter-nasm.git"
+
+[submodule "grammars/tree-sitter-nix"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-nix"
+	url = "git@github.com:nix-community/tree-sitter-nix.git"
+	url = "git@github.com:panekj/tree-sitter-nix.git"
+
+[submodule "grammars/tree-sitter-nu"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-nu"
+	url = "git@github.com:nushell/tree-sitter-nu.git"
+	url = "git@github.com:panekj/tree-sitter-nu.git"
+
+[submodule "grammars/tree-sitter-ocaml"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-ocaml"
+	url = "git@github.com:tree-sitter/tree-sitter-ocaml.git"
+	url = "git@github.com:panekj/tree-sitter-ocaml.git"
+
+[submodule "grammars/tree-sitter-odin"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-odin"
+	url = "git@github.com:ap29600/tree-sitter-odin.git"
+	url = "git@github.com:panekj/tree-sitter-odin.git"
+
+[submodule "grammars/tree-sitter-opencl"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-opencl"
+	url = "git@github.com:lefp/tree-sitter-opencl.git"
+	url = "git@github.com:panekj/tree-sitter-opencl.git"
+
+[submodule "grammars/tree-sitter-pascal"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-pascal"
+	url = "git@github.com:Isopod/tree-sitter-pascal.git"
+	url = "git@github.com:panekj/tree-sitter-pascal.git"
+
+[submodule "grammars/tree-sitter-passwd"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-passwd"
+	url = "git@github.com:ath3/tree-sitter-passwd.git"
+	url = "git@github.com:panekj/tree-sitter-passwd.git"
+
+[submodule "grammars/tree-sitter-pem"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-pem"
+	url = "git@github.com:mtoohey31/tree-sitter-pem.git"
+	url = "git@github.com:panekj/tree-sitter-pem.git"
+
+[submodule "grammars/tree-sitter-php"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-php"
+	url = "git@github.com:tree-sitter/tree-sitter-php.git"
+	url = "git@github.com:panekj/tree-sitter-php.git"
+
+[submodule "grammars/tree-sitter-pkl"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-pkl"
+	url = "git@github.com:apple/tree-sitter-pkl.git"
+	url = "git@github.com:panekj/tree-sitter-pkl.git"
+
+[submodule "grammars/tree-sitter-powershell"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-powershell"
+	url = "git@github.com:airbus-cert/tree-sitter-powershell.git"
+	url = "git@github.com:panekj/tree-sitter-powershell.git"
+
+[submodule "grammars/tree-sitter-prisma"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-prisma"
+	url = "git@github.com:victorhqc/tree-sitter-prisma.git"
+	url = "git@github.com:panekj/tree-sitter-prisma.git"
+
+[submodule "grammars/tree-sitter-protobuf"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-protobuf"
+	url = "git@github.com:yusdacra/tree-sitter-protobuf.git"
+	url = "git@github.com:panekj/tree-sitter-protobuf.git"
+
+[submodule "grammars/tree-sitter-python"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-python"
+	url = "git@github.com:tree-sitter/tree-sitter-python.git"
+	url = "git@github.com:panekj/tree-sitter-python.git"
+
+[submodule "grammars/tree-sitter-ql"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-ql"
+	url = "git@github.com:tree-sitter/tree-sitter-ql.git"
+	url = "git@github.com:panekj/tree-sitter-ql.git"
+
+[submodule "grammars/tree-sitter-r"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-r"
+	url = "git@github.com:r-lib/tree-sitter-r.git"
+	url = "git@github.com:panekj/tree-sitter-r.git"
+
+[submodule "grammars/tree-sitter-rcl"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-rcl"
+	url = "git@github.com:ruuda/rcl.git"
+	url = "git@github.com:panekj/rcl.git"
+
+[submodule "grammars/tree-sitter-regex"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-regex"
+	url = "git@github.com:tree-sitter/tree-sitter-regex.git"
+	url = "git@github.com:panekj/tree-sitter-regex.git"
+
+[submodule "grammars/tree-sitter-rego"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-rego"
+	url = "git@github.com:FallenAngel97/tree-sitter-rego.git"
+	url = "git@github.com:panekj/tree-sitter-rego.git"
+
+[submodule "grammars/tree-sitter-ron"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-ron"
+	url = "git@github.com:zee-editor/tree-sitter-ron.git"
+	url = "git@github.com:panekj/tree-sitter-ron.git"
+
+[submodule "grammars/tree-sitter-rst"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-rst"
+	url = "git@github.com:stsewd/tree-sitter-rst.git"
+	url = "git@github.com:panekj/tree-sitter-rst.git"
+
+[submodule "grammars/tree-sitter-ruby"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-ruby"
+	url = "git@github.com:tree-sitter/tree-sitter-ruby.git"
+	url = "git@github.com:panekj/tree-sitter-ruby.git"
+
+[submodule "grammars/tree-sitter-rust"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-rust"
+	url = "git@github.com:tree-sitter/tree-sitter-rust.git"
+	url = "git@github.com:panekj/tree-sitter-rust.git"
+
+[submodule "grammars/tree-sitter-scala"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-scala"
+	url = "git@github.com:tree-sitter/tree-sitter-scala.git"
+	url = "git@github.com:panekj/tree-sitter-scala.git"
+
+[submodule "grammars/tree-sitter-scheme"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-scheme"
+	url = "git@github.com:6cdh/tree-sitter-scheme.git"
+	url = "git@github.com:panekj/tree-sitter-scheme.git"
+
+[submodule "grammars/tree-sitter-scss"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-scss"
+	url = "git@github.com:serenadeai/tree-sitter-scss.git"
+	url = "git@github.com:panekj/tree-sitter-scss.git"
+
+[submodule "grammars/tree-sitter-slint"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-slint"
+	url = "git@github.com:slint-ui/tree-sitter-slint.git"
+	url = "git@github.com:panekj/tree-sitter-slint.git"
+
+[submodule "grammars/tree-sitter-smithy"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-smithy"
+	url = "git@github.com:indoorvivants/tree-sitter-smithy.git"
+	url = "git@github.com:panekj/tree-sitter-smithy.git"
+
+[submodule "grammars/tree-sitter-sql"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-sql"
+	url = "git@github.com:DerekStride/tree-sitter-sql.git"
+	url = "git@github.com:m-novikov/tree-sitter-sql.git"
+	url = "git@github.com:panekj/tree-sitter-sql.git"
+
+[submodule "grammars/tree-sitter-ssh-client-config"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-ssh-client-config"
+	url = "git@github.com:metio/tree-sitter-ssh-client-config.git"
+	url = "git@github.com:panekj/tree-sitter-ssh-client-config.git"
+
+[submodule "grammars/tree-sitter-strace"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-strace"
+	url = "git@github.com:sigmaSd/tree-sitter-strace.git"
+	url = "git@github.com:panekj/tree-sitter-strace.git"
+
+[submodule "grammars/tree-sitter-svelte"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-svelte"
+	url = "git@github.com:Himujjal/tree-sitter-svelte.git"
+	url = "git@github.com:panekj/tree-sitter-svelte.git"
+
+[submodule "grammars/tree-sitter-sway"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-sway"
+	url = "git@github.com:FuelLabs/tree-sitter-sway.git"
+	url = "git@github.com:panekj/tree-sitter-sway.git"
+
+[submodule "grammars/tree-sitter-swift"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-swift"
+	url = "git@github.com:alex-pinkus/tree-sitter-swift.git"
+	url = "git@github.com:panekj/tree-sitter-swift.git"
+
+[submodule "grammars/tree-sitter-tcl"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-tcl"
+	url = "git@github.com:tree-sitter-grammars/tree-sitter-tcl.git"
+	url = "git@github.com:panekj/tree-sitter-tcl.git"
+
+[submodule "grammars/tree-sitter-toml"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-toml"
+	url = "git@github.com:Mathspy/tree-sitter-toml.git"
+	url = "git@github.com:panekj/tree-sitter-toml.git"
+
+[submodule "grammars/tree-sitter-typescript"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-typescript"
+	url = "git@github.com:tree-sitter/tree-sitter-typescript.git"
+	url = "git@github.com:panekj/tree-sitter-typescript.git"
+
+[submodule "grammars/tree-sitter-typst"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-typst"
+	url = "git@github.com:uben0/tree-sitter-typst.git"
+	url = "git@github.com:panekj/tree-sitter-typst.git"
+
+[submodule "grammars/tree-sitter-vala"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-vala"
+	url = "git@github.com:vala-lang/tree-sitter-vala.git"
+	url = "git@github.com:panekj/tree-sitter-vala.git"
+
+[submodule "grammars/tree-sitter-verilog"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-verilog"
+	url = "git@github.com:tree-sitter/tree-sitter-verilog.git"
+	url = "git@github.com:panekj/tree-sitter-verilog.git"
+
+[submodule "grammars/tree-sitter-vue"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-vue"
+	url = "git@github.com:xiaoxin-sky/tree-sitter-vue.git"
+	url = "git@github.com:tree-sitter-grammars/tree-sitter-vue.git"
+	url = "git@github.com:panekj/tree-sitter-vue.git"
+
+[submodule "grammars/tree-sitter-wasm"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-wasm"
+	url = "git@github.com:wasm-lsp/tree-sitter-wasm.git"
+	url = "git@github.com:panekj/tree-sitter-wasm.git"
+
+[submodule "grammars/tree-sitter-wgsl"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-wgsl"
+	url = "git@github.com:szebniok/tree-sitter-wgsl.git"
+	url = "git@github.com:panekj/tree-sitter-wgsl.git"
+
+[submodule "grammars/tree-sitter-wit"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-wit"
+	url = "git@github.com:hh9527/tree-sitter-wit.git"
+	url = "git@github.com:panekj/tree-sitter-wit.git"
+
+[submodule "grammars/tree-sitter-xml"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-xml"
+	url = "git@github.com:dorgnarg/tree-sitter-xml.git"
+	url = "git@github.com:RenjiSann/tree-sitter-xml.git"
+	url = "git@github.com:panekj/tree-sitter-xml.git"
+
+[submodule "grammars/tree-sitter-yaml"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-yaml"
+	url = "git@github.com:tree-sitter-grammars/tree-sitter-yaml.git"
+	url = "git@github.com:panekj/tree-sitter-yaml.git"
+
+[submodule "grammars/tree-sitter-zig"]
+	branch = "lapce/0.4.0"
+	path = "grammars/tree-sitter-zig"
+	url = "git@github.com:maxxnino/tree-sitter-zig.git"
+	url = "git@github.com:panekj/tree-sitter-zig.git"
