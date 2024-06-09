@@ -13,6 +13,10 @@ on:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   build:
     runs-on: ${{ matrix.runs-on }}
@@ -49,7 +53,7 @@ jobs:
         run: rustup update
 
       - name: Install Tree-Sitter CLI
-        run: cargo install tree-sitter-cli@^0.20 --locked
+        run: cargo install tree-sitter-cli@^0.22 --locked
 
       - name: Build grammars
         if: always()

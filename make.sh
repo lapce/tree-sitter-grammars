@@ -9,6 +9,20 @@ cleanup() {
     cd $root
 }
 
+DLL_SUFFIX="so"
+case "${OSTYPE}" in
+    linux-*)
+        DLL_SUFFIX="so"
+    ;;
+    darwin)
+        DLL_SUFFIX="dylib"
+    ;;
+    cywgin|msys|win32)
+        DLL_SUFFIX="dll"
+    ;;
+    *) exit 1 ;;
+esac
+
 trap cleanup 1 2 3 6
 
 pushd ./grammars
@@ -32,16 +46,16 @@ for grammar in * ; do
 
     case "${grammar}" in
         "tree-sitter-markdown")
-            cp ./tree-sitter-markdown{,-inline}/*.so "${output}"/
+            cp ./tree-sitter-markdown{,-inline}/*."${DLL_SUFFIX}" "${output}"/
         ;;
         "tree-sitter-typescript")
-            cp ./{tsx,typescript}/*.so "${output}"/
+            cp ./{tsx,typescript}/*."${DLL_SUFFIX}" "${output}"/
         ;;
         "tree-sitter-wasm")
-            cp ./wa{,s}t/*.so "${output}"/
+            cp ./wa{,s}t/*."${DLL_SUFFIX}" "${output}"/
         ;;
         *)
-            cp ./*.so "${output}"/
+            cp ./*."${DLL_SUFFIX}" "${output}"/
         ;;
     esac
 
