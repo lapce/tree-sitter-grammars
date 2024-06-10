@@ -1,11 +1,14 @@
 #!/usr/bin/env python
 """Script to build all grammars"""
 
+import os
 import logging
 from pathlib import Path
 from platform import system
 from shutil import copy
 from subprocess import run
+
+ci = os.getenv("GITHUB_ACTIONS")
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
@@ -52,7 +55,8 @@ def main():
             continue
 
         grammar_name = grammar.name
-
+        if ci is not None:
+            print(f"::group::Build {grammar_name}")
         logger.info("building grammar: %s", grammar_name)
 
         match grammar_name:
@@ -68,7 +72,7 @@ def main():
         if clean:
             # pylint: disable-next=exec-used
             make_clean = run(
-                [make_exec(), "clean"], capture_output=True, check=True, cwd=grammar
+                [make_exec(), "clean"], capture_output=True, check=False, cwd=grammar
             )
             for line in make.stdout.splitlines():
                 logging.info(line.decode())
@@ -78,7 +82,7 @@ def main():
                 logging.error('Failed to execute "make clean" for %s', grammar_name)
 
         # pylint: disable-next=exec-used
-        make = run([make_exec()], capture_output=True, check=True, cwd=grammar)
+        make = run([make_exec()], capture_output=True, check=False, cwd=grammar)
         for line in make.stdout.splitlines():
             logging.info(line.decode())
         for line in make.stderr.splitlines():
@@ -153,6 +157,9 @@ def main():
                     if lic.name.startswith("COPYING"):
                         suffix = "COPYING"
                     copy_lic(lic, output.joinpath(f"{grammar_name}.{suffix}"))
+
+        if ci is not None:
+            print("::endgroup::")
 
 
 if __name__ == "__main__":

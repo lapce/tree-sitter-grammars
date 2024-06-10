@@ -34,7 +34,7 @@ jobs:
     env:
       RELEASE_TAG_NAME: ${{ inputs.tag_name }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -45,17 +45,21 @@ jobs:
           sudo apt-get -y install curl wget clang pkg-config
           sudo update-alternatives --set cc /usr/bin/clang
 
-      - name: Update rust
-        run: rustup update
+      - name: Install macOS dependencies
+        if: runner.os == 'macOS'
+        run: |
+          sudo brew install make
 
-      - name: Install Tree-Sitter CLI
-        run: cargo install tree-sitter-cli@^0.22 --locked
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
       - name: Build grammars
         if: always()
-        run: python3 ./make.py
+        run: make.py
+        shell: python
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ matrix.artefact }}
