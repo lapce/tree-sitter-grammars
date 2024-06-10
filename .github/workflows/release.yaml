@@ -13,10 +13,6 @@ on:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   build:
     runs-on: ${{ matrix.runs-on }}
@@ -57,7 +53,7 @@ jobs:
 
       - name: Build grammars
         if: always()
-        run: ./make.sh
+        run: python3 ./make.py
 
       - uses: actions/upload-artifact@v3
         if: always()
