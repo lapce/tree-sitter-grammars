@@ -9,3 +9,5 @@
 **/target
 /output
 /tmp
+grammars/
+.DS_Store

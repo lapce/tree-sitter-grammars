@@ -1,4 +1,4 @@
-use anyhow::{bail, Context, Result};
+use anyhow::{anyhow, bail, Context, Result};
 use clap::Parser;
 use dunce::canonicalize;
 use serde::{Deserialize, Serialize};
@@ -29,6 +29,8 @@ struct GrammarsFile {
 #[non_exhaustive]
 #[derive(Debug, Deserialize, Serialize)]
 struct GrammarBuildInfo {
+    git: String,
+    rev: String,
     path: PathBuf,
     cpp: Option<bool>,
     relative: Option<PathBuf>,
@@ -78,6 +80,46 @@ fn main() -> Result<()> {
 
     for (name, grammar) in config.grammars {
         info!("Building: {name}");
+
+        if grammar.path.exists() {
+            let output = Command::new("git")
+                .current_dir(&grammar.path)
+                .arg("fetch")
+                .output()?;
+            if !output.status.success() {
+                return Err(anyhow!("git fetch failed"));
+            }
+
+            let output = Command::new("git")
+                .current_dir(&grammar.path)
+                .arg("checkout")
+                .arg(&grammar.rev)
+                .output()?;
+            if !output.status.success() {
+                return Err(anyhow!("git checkout failed"));
+            }
+        } else {
+            std::fs::create_dir_all(&grammar.path)?;
+            let output = Command::new("git")
+                .current_dir(&grammar.path)
+                .arg("clone")
+                .arg(&grammar.git)
+                .arg(".")
+                .output()?;
+            if !output.status.success() {
+                return Err(anyhow!("git clone failed"));
+            }
+
+            let output = Command::new("git")
+                .current_dir(&grammar.path)
+                .arg("checkout")
+                .arg(&grammar.rev)
+                .output()?;
+            if !output.status.success() {
+                return Err(anyhow!("git checkout failed"));
+            }
+        }
+
         let grammar_path = match canonicalize(&grammar.path) {
             Ok(v) => v,
             Err(e) => {
@@ -193,7 +235,7 @@ impl TreeSitterPaths {
         cpp: Option<bool>,
         generate: Option<bool>,
     ) -> Self {
-        let _cpp = if let Some(cpp) = cpp { cpp } else { false };
+        let _cpp = cpp.unwrap_or_default();
         // Resolve subpath within the repo if any
         let subpath = relative.map(|subpath| repo.join(subpath)).unwrap_or(repo);
 

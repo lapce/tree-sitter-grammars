@@ -1,281 +1,307 @@
 [grammars]
 
-# [grammars.tree-sitter-name]
-# path     = "./grammars/tree-sitter-name"
-# cpp      = true
-# relative = "subpath"
-
 [grammars.tree-sitter-bash]
+git     = "https://github.com/tree-sitter/tree-sitter-bash"
+rev     = "f8fb3274f72a30896075585b32b0c54cad65c086"
 path    = "./grammars/tree-sitter-bash"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-c]
-path = "./grammars/tree-sitter-c"
+git     = "https://github.com/tree-sitter/tree-sitter-c"
+rev     = "7175a6dd5fc1cee660dce6fe23f6043d75af424a"
+path    = "./grammars/tree-sitter-c"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-c-sharp]
+git  = "https://github.com/tree-sitter/tree-sitter-c-sharp"
+rev  = "5b60f99545fea00a33bbfae5be956f684c4c69e2"
 path = "./grammars/tree-sitter-c-sharp"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-clojure]
-path = "./grammars/tree-sitter-clojure"
+git     = "https://github.com/sogaiu/tree-sitter-clojure"
+rev     = "e57c569ae332ca365da623712ae1f50f84daeae2"
+path    = "./grammars/tree-sitter-clojure"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-cmake]
+git = "https://github.com/uyha/tree-sitter-cmake"
+rev = "6e51463ef3052dd3b328322c22172eda093727ad"
 path = "./grammars/tree-sitter-cmake"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-cpp]
+git = "https://github.com/tree-sitter/tree-sitter-cpp"
+rev = "670404d7c689be1c868a46f919ba2a3912f2b7ef"
 path = "./grammars/tree-sitter-cpp"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-css]
+git = "https://github.com/tree-sitter/tree-sitter-css"
+rev = "769203d0f9abe1a9a691ac2b9fe4bb4397a73c51"
 path = "./grammars/tree-sitter-css"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-d]
+git = "https://github.com/gdamore/tree-sitter-d"
+rev = "5566f8ce8fc24186fad06170bbb3c8d97c935d74"
 path = "./grammars/tree-sitter-d"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-dockerfile]
+git = "https://github.com/camdencheek/tree-sitter-dockerfile"
+rev = "8ee3a0f7587b2bd8c45c8cb7d28bd414604aec62"
 path = "./grammars/tree-sitter-dockerfile"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-elixir]
+git = "https://github.com/elixir-lang/tree-sitter-elixir"
+rev = "b20eaa75565243c50be5e35e253d8beb58f45d56"
 path = "./grammars/tree-sitter-elixir"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-elm]
+git = "https://github.com/elm-tooling/tree-sitter-elm"
+rev = "df4cb639c01b76bc9ac9cc66788709a6da20002c"
 path = "./grammars/tree-sitter-elm"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-erlang]
+git = "https://github.com/the-mikedavis/tree-sitter-erlang"
+rev = "9d4b36a76d5519e3dbf1ec4f4b61bb1a293f584c"
 path = "./grammars/tree-sitter-erlang"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-glimmer]
+git = "https://github.com/ember-tooling/tree-sitter-glimmer"
+rev = "5dc6d1040e8ff8978ff3680e818d85447bbc10aa"
 path = "./grammars/tree-sitter-glimmer"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-glsl]
+git = "https://github.com/theHamsta/tree-sitter-glsl"
+rev = "88408ffc5e27abcffced7010fc77396ae3636d7e"
 path = "./grammars/tree-sitter-glsl"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-go]
+git = "https://github.com/tree-sitter/tree-sitter-go"
+rev = "64457ea6b73ef5422ed1687178d4545c3e91334a"
 path = "./grammars/tree-sitter-go"
 generate = true
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-hare]
+git = "https://git.sr.ht/~ecmma/tree-sitter-hare"
+rev = "2495958aaf3f93581c87ec020164255e80655331"
 path = "./grammars/tree-sitter-hare"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-haskell]
+git = "https://github.com/tree-sitter/tree-sitter-haskell"
+rev = "d7ac98f49e3ed7e17541256fe3881a967d7ffdd3"
 path = "./grammars/tree-sitter-haskell"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-haxe]
-path = "./grammars/tree-sitter-haxe"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
-
 [grammars.tree-sitter-hcl]
+git = "https://github.com/MichaHoffmann/tree-sitter-hcl"
+rev = "3cb7fc28247efbcb2973b97e71c78838ad98a583"
 path = "./grammars/tree-sitter-hcl"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-html]
-path = "./grammars/tree-sitter-html"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-html]
+# path = "./grammars/tree-sitter-html"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-java]
-path = "./grammars/tree-sitter-java"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-java]
+# path = "./grammars/tree-sitter-java"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-javascript]
-path = "./grammars/tree-sitter-javascript"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-javascript]
+# path = "./grammars/tree-sitter-javascript"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-json]
-path = "./grammars/tree-sitter-json"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-json]
+# path = "./grammars/tree-sitter-json"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-julia]
-path = "./grammars/tree-sitter-julia"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-julia]
+# path = "./grammars/tree-sitter-julia"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-kotlin]
-path = "./grammars/tree-sitter-kotlin"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-kotlin]
+# path = "./grammars/tree-sitter-kotlin"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-latex]
-path = "./grammars/tree-sitter-latex"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-latex]
+# path = "./grammars/tree-sitter-latex"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-lua]
-path = "./grammars/tree-sitter-lua"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-lua]
+# path = "./grammars/tree-sitter-lua"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-markdown]
-path     = "./grammars/tree-sitter-markdown"
-relative = "tree-sitter-markdown"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-markdown]
+# path     = "./grammars/tree-sitter-markdown"
+# relative = "tree-sitter-markdown"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-markdown-inline]
-path     = "./grammars/tree-sitter-markdown"
-relative = "tree-sitter-markdown-inline"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-markdown-inline]
+# path     = "./grammars/tree-sitter-markdown"
+# relative = "tree-sitter-markdown-inline"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-nix]
-path = "./grammars/tree-sitter-nix"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-nix]
+# path = "./grammars/tree-sitter-nix"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-ocaml]
-path     = "./grammars/tree-sitter-ocaml"
-relative = "ocaml"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-ocaml]
+# path     = "./grammars/tree-sitter-ocaml"
+# relative = "ocaml"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-ocaml-interface]
-path     = "./grammars/tree-sitter-ocaml"
-relative = "interface"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-ocaml-interface]
+# path     = "./grammars/tree-sitter-ocaml"
+# relative = "interface"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-php]
-path = "./grammars/tree-sitter-php"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-php]
+# path = "./grammars/tree-sitter-php"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-prisma]
-path = "./grammars/tree-sitter-prisma"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-prisma]
+# path = "./grammars/tree-sitter-prisma"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-protobuf]
-path = "./grammars/tree-sitter-protobuf"
-generate = true
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-protobuf]
+# path = "./grammars/tree-sitter-protobuf"
+# generate = true
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-python]
-path = "./grammars/tree-sitter-python"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-python]
+# path = "./grammars/tree-sitter-python"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-ql]
-path = "./grammars/tree-sitter-ql"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-ql]
+# path = "./grammars/tree-sitter-ql"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-r]
-path = "./grammars/tree-sitter-r"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-r]
+# path = "./grammars/tree-sitter-r"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-ruby]
-path = "./grammars/tree-sitter-ruby"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-ruby]
+# path = "./grammars/tree-sitter-ruby"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-rust]
-path = "./grammars/tree-sitter-rust"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-rust]
+# path = "./grammars/tree-sitter-rust"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-scheme]
-path = "./grammars/tree-sitter-scheme"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-scheme]
+# path = "./grammars/tree-sitter-scheme"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-scss]
-path = "./grammars/tree-sitter-scss"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-scss]
+# path = "./grammars/tree-sitter-scss"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-sql]
-path = "./grammars/tree-sitter-sql"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-sql]
+# path = "./grammars/tree-sitter-sql"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-svelte]
-path = "./grammars/tree-sitter-svelte"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-svelte]
+# path = "./grammars/tree-sitter-svelte"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-swift]
-generate = true
-path     = "./grammars/tree-sitter-swift"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-swift]
+# generate = true
+# path     = "./grammars/tree-sitter-swift"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-toml]
-path = "./grammars/tree-sitter-toml"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-toml]
+# path = "./grammars/tree-sitter-toml"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-typescript]
-path     = "./grammars/tree-sitter-typescript"
-relative = "typescript"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-typescript]
+# path     = "./grammars/tree-sitter-typescript"
+# relative = "typescript"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-typescript-react]
-path     = "./grammars/tree-sitter-typescript"
-relative = "tsx"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-tsx]
+# path     = "./grammars/tree-sitter-typescript"
+# relative = "tsx"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-vue]
-path = "./grammars/tree-sitter-vue"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-vue]
+# path = "./grammars/tree-sitter-vue"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-wgsl]
-path = "./grammars/tree-sitter-wgsl"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-wgsl]
+# path = "./grammars/tree-sitter-wgsl"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-xml]
-path = "./grammars/tree-sitter-xml"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-xml]
+# path = "./grammars/tree-sitter-xml"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
 
-[grammars.tree-sitter-yaml]
-path = "./grammars/tree-sitter-yaml"
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.cc", cpp = true, flags = [] }
+# [grammars.tree-sitter-yaml]
+# path = "./grammars/tree-sitter-yaml"
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.cc", cpp = true, flags = [] }
 
-[grammars.tree-sitter-zig]
-path = "./grammars/tree-sitter-zig"
-generate = true
-parser  = { path = "parser.c", cpp = false, flags = [] }
-scanner = { path = "scanner.c", cpp = false, flags = [] }
+# [grammars.tree-sitter-zig]
+# path = "./grammars/tree-sitter-zig"
+# generate = true
+# parser  = { path = "parser.c", cpp = false, flags = [] }
+# scanner = { path = "scanner.c", cpp = false, flags = [] }
