@@ -30,7 +30,7 @@ struct GrammarsFile {
 #[derive(Debug, Deserialize, Serialize)]
 struct GrammarBuildInfo {
     git: String,
-    rev: String,
+    rev: Option<String>,
     path: PathBuf,
     cpp: Option<bool>,
     relative: Option<PathBuf>,
@@ -90,13 +90,15 @@ fn main() -> Result<()> {
                 return Err(anyhow!("git fetch failed"));
             }
 
-            let output = Command::new("git")
-                .current_dir(&grammar.path)
-                .arg("checkout")
-                .arg(&grammar.rev)
-                .output()?;
-            if !output.status.success() {
-                return Err(anyhow!("git checkout failed"));
+            if let Some(rev) = &grammar.rev {
+                let output = Command::new("git")
+                    .current_dir(&grammar.path)
+                    .arg("checkout")
+                    .arg(rev)
+                    .output()?;
+                if !output.status.success() {
+                    return Err(anyhow!("git checkout failed"));
+                }
             }
         } else {
             std::fs::create_dir_all(&grammar.path)?;
@@ -110,13 +112,15 @@ fn main() -> Result<()> {
                 return Err(anyhow!("git clone failed"));
             }
 
-            let output = Command::new("git")
-                .current_dir(&grammar.path)
-                .arg("checkout")
-                .arg(&grammar.rev)
-                .output()?;
-            if !output.status.success() {
-                return Err(anyhow!("git checkout failed"));
+            if let Some(rev) = &grammar.rev {
+                let output = Command::new("git")
+                    .current_dir(&grammar.path)
+                    .arg("checkout")
+                    .arg(rev)
+                    .output()?;
+                if !output.status.success() {
+                    return Err(anyhow!("git checkout failed"));
+                }
             }
         }
 

@@ -37,7 +37,6 @@ scanner = { path = "scanner.c", cpp = false, flags = [] }
 
 [grammars.tree-sitter-cpp]
 git = "https://github.com/tree-sitter/tree-sitter-cpp"
-rev = "670404d7c689be1c868a46f919ba2a3912f2b7ef"
 path = "./grammars/tree-sitter-cpp"
 parser  = { path = "parser.c", cpp = false, flags = [] }
 scanner = { path = "scanner.c", cpp = false, flags = [] }
