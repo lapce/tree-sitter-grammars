@@ -40,16 +40,16 @@ def lib_suffix():
             return ""
 
 
-def build(grammar, grammar_name):
+def build(grammar):
     """Build tree-sitter grammar"""
     # pylint: disable-next=exec-used
-    make = run(['tree-sitter', 'build'], capture_output=True, check=False, cwd=grammar)
+    make = run(['tree-sitter', 'build', '.'], capture_output=True, check=False, cwd=grammar)
     for line in make.stdout.splitlines():
         logging.info(line.decode())
     for line in make.stderr.splitlines():
         logging.info(line.decode())
     if make.returncode != 0:
-        logging.error('Failed to execute "tree-sitter build" for %s', grammar_name)
+        logging.error('Failed to execute "tree-sitter build" for %s', grammar)
         return False
     return True
 
@@ -94,22 +94,22 @@ def main():
         match grammar_name:
             case "tree-sitter-markdown":
                 for subdir in ["tree-sitter-markdown", "tree-sitter-markdown-inline"]:
-                    if build(grammar.joinpath(subdir), grammar_name) is False:
+                    if build(grammar.joinpath(subdir)) is False:
                         continue
             case "tree-sitter-ocaml":
                 for subdir in ["grammars/ocaml", "grammars/interface", "grammars/type"]:
-                    if build(grammar.joinpath(subdir), grammar_name) is False:
+                    if build(grammar.joinpath(subdir)) is False:
                         continue
             case "tree-sitter-typescript":
                 for subdir in ["tsx", "typescript"]:
-                    if build(grammar.joinpath(subdir), grammar_name) is False:
+                    if build(grammar.joinpath(subdir)) is False:
                         continue
             case "tree-sitter-wasm":
                 for subdir in ["wast", "wat"]:
-                    if build(grammar.joinpath(subdir), grammar_name) is False:
+                    if build(grammar.joinpath(subdir)) is False:
                         continue
             case _:
-                if build(grammar, grammar_name) is False:
+                if build(grammar) is False:
                     continue
 
         for lib in grammar.glob(f"**/libtree-sitter-*.{lib_suffix()}"):
