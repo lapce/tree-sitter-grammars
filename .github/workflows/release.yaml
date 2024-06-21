@@ -45,10 +45,9 @@ jobs:
           sudo apt-get -y install curl wget clang pkg-config
           sudo update-alternatives --set cc /usr/bin/clang
 
-      - name: Install macOS dependencies
-        if: runner.os == 'macOS'
+      - name: Install tree-sitter-cli
         run: |
-          sudo brew install make
+          cargo install tree-sitter-cli --locked
 
       - uses: actions/setup-python@v5
         with:

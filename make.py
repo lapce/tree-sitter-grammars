@@ -39,6 +39,19 @@ def lib_suffix():
             return ""
 
 
+def build(grammar, grammar_name):
+    """Build tree-sitter grammar"""
+    # pylint: disable-next=exec-used
+    make = run(['tree-sitter', 'build'], capture_output=True, check=False, cwd=grammar)
+    for line in make.stdout.splitlines():
+        logging.info(line.decode())
+    for line in make.stderr.splitlines():
+        logging.info(line.decode())
+    if make.returncode != 0:
+        logging.error('Failed to execute "tree-sitter build" for %s', grammar_name)
+        return False
+    return True
+
 def main():
     """Main program"""
     output = cwd.joinpath("output")
@@ -46,8 +59,6 @@ def main():
     if output.exists() is False:
         logging.info("Creating 'output' dir")
         output.mkdir(mode=0o755, parents=True, exist_ok=True)
-
-    clean = False
 
     for grammar in sorted(cwd.joinpath("grammars").iterdir()):
         if grammar.is_dir() is False:
@@ -59,6 +70,10 @@ def main():
             print(f"::group::Build {grammar_name}")
         logger.info("building grammar: %s", grammar_name)
 
+        # Skip built grammars
+        if next(grammar.glob(f"**/libtree-sitter-*.{lib_suffix()}"), False) is False:
+            continue
+
         match grammar_name:
             case "tree-sitter-adl":  # bad licence
                 continue
@@ -68,56 +83,38 @@ def main():
                 continue
             case "tree-sitter-rcl":  # monorepo
                 grammar = grammar.joinpath("grammar").joinpath("tree-sitter-rcl")
+            case "tree-sitter-php":  # multi-grammar
+                grammar = grammar.joinpath("php")
+            case "tree-sitter-vue":
+                continue # C++ grammar
+            case "tree-sitter-sql":
+                continue # C++ grammar
 
-        if clean:
-            # pylint: disable-next=exec-used
-            make_clean = run(
-                [make_exec(), "clean"], capture_output=True, check=False, cwd=grammar
-            )
-            for line in make.stdout.splitlines():
-                logging.info(line.decode())
-            for line in make.stderr.splitlines():
-                logging.info(line.decode())
-            if make_clean.returncode != 0:
-                logging.error('Failed to execute "make clean" for %s', grammar_name)
+        match grammar_name:
+            case "tree-sitter-markdown":
+                for subdir in ["tree-sitter-markdown", "tree-sitter-markdown-inline"]:
+                    if build(grammar.joinpath(subdir), grammar_name) is False:
+                        continue
+            case "tree-sitter-ocaml":
+                for subdir in ["grammars/ocaml", "grammars/interface", "grammars/type"]:
+                    if build(grammar.joinpath(subdir), grammar_name) is False:
+                        continue
+            case "tree-sitter-typescript":
+                for subdir in ["tsx", "typescript"]:
+                    if build(grammar.joinpath(subdir), grammar_name) is False:
+                        continue
+            case "tree-sitter-wasm":
+                for subdir in ["wast", "wat"]:
+                    if build(grammar.joinpath(subdir), grammar_name) is False:
+                        continue
+            case _:
+                if build(grammar, grammar_name) is False:
+                    continue
 
-        # pylint: disable-next=exec-used
-        make = run([make_exec()], capture_output=True, check=False, cwd=grammar)
-        for line in make.stdout.splitlines():
-            logging.info(line.decode())
-        for line in make.stderr.splitlines():
-            logging.info(line.decode())
-        if make.returncode != 0:
-            logging.error('Failed to execute "make" for %s', grammar_name)
-
-        def copy_lib(lib_path):
+        for lib in grammar.glob(f"**/libtree-sitter-*.{lib_suffix()}"):
+            lib_path = grammar.joinpath(lib)
             logging.info("copying '%s' to output", lib_path)
             copy(lib_path, output)
-
-        # match grammar_name:
-        #     case "tree-sitter-markdown":
-        #         # cp ./tree-sitter-markdown{,-inline}/lib"${grammar}".* "${output}"/
-        #         for dirname in ['', '-inline']:
-        #             for lib in grammar.joinpath(dirname).glob(f"*.{lib_suffix()}"):
-        #                 copy_lib(grammar.joinpath(f"{grammar_name}{dirname}/{lib}.{lib_suffix()}"))
-        #     case "tree-sitter-php":
-        #         # cp ./tree-sitter-php/lib"${grammar}".* "${output}"/
-        #         copy_lib(grammar.joinpath(f"php/lib{grammar_name}.{lib_suffix()}"))
-        #     case "tree-sitter-typescript":
-        #         # cp ./{tsx,typescript}/lib"${grammar}".* "${output}"/
-        #         for lib in grammar.glob(f"**.{lib_suffix()}"):
-        #             copy_lib(grammar.joinpath(lib))
-        #     case "tree-sitter-wasm":
-        #         # cp ./wa{,s}t/lib"${grammar}".* "${output}"/
-        #         for lib in grammar.glob(f"**.{lib_suffix()}"):
-        #             copy_lib(grammar.joinpath(lib))
-        #     case _:
-        #         # cp ./lib"${grammar}".* "${output}"/
-        #         for lib in grammar.glob(f"*.{lib_suffix()}"):
-        #             copy_lib(grammar.joinpath(lib))
-
-        for lib in grammar.glob(f"**/*.{lib_suffix()}"):
-            copy_lib(grammar.joinpath(lib))
 
         def copy_lic(src_lic_path, dst_lic_path):
             logging.info("copying '%s' to '%s'", src_lic_path, dst_lic_path)
@@ -159,7 +156,7 @@ def main():
                     copy_lic(lic, output.joinpath(f"{grammar_name}.{suffix}"))
 
         if ci is not None:
-            print("::endgroup::")
+            print("\n::endgroup::")
 
 
 if __name__ == "__main__":
