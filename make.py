@@ -2,6 +2,7 @@
 """Script to build all grammars"""
 
 import os
+import sys
 import logging
 from pathlib import Path
 from platform import system
@@ -11,7 +12,7 @@ from subprocess import run
 ci = os.getenv("GITHUB_ACTIONS")
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='%(asctime)s %(message)s')
 
 cwd = Path.cwd().resolve()
 logger.info("cwd: %s", cwd)
@@ -70,9 +71,9 @@ def main():
             print(f"::group::Build {grammar_name}")
         logger.info("building grammar: %s", grammar_name)
 
-        # Skip built grammars
-        if next(grammar.glob(f"**/libtree-sitter-*.{lib_suffix()}"), False) is False:
-            continue
+        # # Skip built grammars
+        # if next(grammar.glob(f"**/libtree-sitter-*.{lib_suffix()}"), False) is False:
+        #     continue
 
         match grammar_name:
             case "tree-sitter-adl":  # bad licence

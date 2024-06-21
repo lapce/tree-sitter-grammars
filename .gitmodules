@@ -680,6 +680,7 @@
 	branch = "lapce/0.4.0"
 	path = "grammars/tree-sitter-vue"
 	url = "git@github.com:xiaoxin-sky/tree-sitter-vue.git"
+	url = "git@github.com:tree-sitter-grammars/tree-sitter-vue.git"
 	url = "git@github.com:panekj/tree-sitter-vue.git"
 
 [submodule "grammars/tree-sitter-wasm"]
