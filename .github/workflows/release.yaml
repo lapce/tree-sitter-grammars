@@ -57,13 +57,13 @@ jobs:
         if: runner.os != 'Windows'
         run: |
           mkdir -p ~/.config/tree-sitter
-          '{"parser-directories": ["${{ github.workspace }}/grammars"]}' > ~/.config/tree-sitter/config.json
+          echo '{"parser-directories": ["${{ github.workspace }}/grammars"]}' > ~/.config/tree-sitter/config.json
 
       - name: Create tree-sitter-cli config
         if: runner.os == 'Windows'
         run: |
           mkdir -Force ~/.config/tree-sitter
-          '{"parser-directories": ["${{ github.workspace }}\grammars"]}' > ~/.config/tree-sitter/config.json
+          echo '{"parser-directories": ["${{ github.workspace }}\grammars"]}' > ~/.config/tree-sitter/config.json
 
       - name: Build grammars
         if: always()
