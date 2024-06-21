@@ -12,7 +12,9 @@ from subprocess import run
 ci = os.getenv("GITHUB_ACTIONS")
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='%(asctime)s %(message)s')
+logging.basicConfig(
+    stream=sys.stdout, level=logging.INFO, format="%(asctime)s %(message)s"
+)
 
 cwd = Path.cwd().resolve()
 logger.info("cwd: %s", cwd)
@@ -40,10 +42,21 @@ def lib_suffix():
             return ""
 
 
-def build(grammar):
+def build(grammar, grammar_name, output):
     """Build tree-sitter grammar"""
     # pylint: disable-next=exec-used
-    make = run(['tree-sitter', 'build', '.'], capture_output=True, check=False, cwd=grammar)
+    make = run(
+        [
+            "tree-sitter",
+            "build",
+            "--output",
+            output.joinpath(f"lib{grammar_name}.{lib_suffix()}"),
+            ".",
+        ],
+        capture_output=True,
+        check=False,
+        cwd=grammar,
+    )
     for line in make.stdout.splitlines():
         logging.info(line.decode())
     for line in make.stderr.splitlines():
@@ -52,6 +65,7 @@ def build(grammar):
         logging.error('Failed to execute "tree-sitter build" for %s', grammar)
         return False
     return True
+
 
 def main():
     """Main program"""
@@ -87,35 +101,30 @@ def main():
             case "tree-sitter-php":  # multi-grammar
                 grammar = grammar.joinpath("php")
             case "tree-sitter-vue":
-                continue # C++ grammar
+                continue  # C++ grammar
             case "tree-sitter-sql":
-                continue # C++ grammar
+                continue  # C++ grammar
 
         match grammar_name:
             case "tree-sitter-markdown":
                 for subdir in ["tree-sitter-markdown", "tree-sitter-markdown-inline"]:
-                    if build(grammar.joinpath(subdir)) is False:
+                    if build(grammar.joinpath(subdir), grammar_name, output) is False:
                         continue
             case "tree-sitter-ocaml":
                 for subdir in ["grammars/ocaml", "grammars/interface", "grammars/type"]:
-                    if build(grammar.joinpath(subdir)) is False:
+                    if build(grammar.joinpath(subdir), grammar_name, output) is False:
                         continue
             case "tree-sitter-typescript":
                 for subdir in ["tsx", "typescript"]:
-                    if build(grammar.joinpath(subdir)) is False:
+                    if build(grammar.joinpath(subdir), grammar_name, output) is False:
                         continue
             case "tree-sitter-wasm":
                 for subdir in ["wast", "wat"]:
-                    if build(grammar.joinpath(subdir)) is False:
+                    if build(grammar.joinpath(subdir), grammar_name, output) is False:
                         continue
             case _:
-                if build(grammar) is False:
+                if build(grammar, grammar_name, output) is False:
                     continue
-
-        for lib in grammar.glob(f"**/libtree-sitter-*.{lib_suffix()}"):
-            lib_path = grammar.joinpath(lib)
-            logging.info("copying '%s' to output", lib_path)
-            copy(lib_path, output)
 
         def copy_lic(src_lic_path, dst_lic_path):
             logging.info("copying '%s' to '%s'", src_lic_path, dst_lic_path)
@@ -150,7 +159,7 @@ def main():
                 # Get first one
                 lic = next(copg, next(licg, ""))
 
-                if lic != '' and lic.exists() is True:
+                if lic != "" and lic.exists() is True:
                     suffix = "LICENSE"
                     if lic.name.startswith("COPYING"):
                         suffix = "COPYING"
