@@ -1,8 +1,6 @@
 name: Release
 
 on:
-  schedule:
-    - cron: 0 0 */7 * *
   workflow_dispatch:
     inputs:
       tag_name:
@@ -10,7 +8,6 @@ on:
         required: false
         default: nightly
   push:
-    tags: ["v[0-9]+.[0-9]+.[0-9]+*"]
   pull_request:
 
 env:
@@ -25,16 +22,19 @@ jobs:
         include:
           - runs-on: windows-latest
             artefact: windows-x86_64
+
           - runs-on: ubuntu-latest
             artefact: linux-x86_64
+
           - runs-on: macos-14
             artefact: macos-arm64
+
           - runs-on: macos-13
             artefact: macos-x86_64
     env:
       RELEASE_TAG_NAME: ${{ inputs.tag_name }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
 
@@ -45,23 +45,22 @@ jobs:
           sudo apt-get -y install curl wget clang pkg-config
           sudo update-alternatives --set cc /usr/bin/clang
 
-      - name: Update rust
-        run: rustup update
-
-      - name: Fetch dependencies
+      - name: Install tree-sitter-cli
         run: |
-          cargo install --path ./build-tree-sitter --locked
-          cargo install tree-sitter-cli --locked
+          cargo install tree-sitter-cli@^0.22 --locked
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
       - name: Build grammars
         if: always()
-        run: |
-            build-tree-sitter --output ./output
+        run: python ./make.py
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: lapce-${{ matrix.artefact }}
+          name: ${{ matrix.artefact }}
           path: |
             output
           retention-days: 1

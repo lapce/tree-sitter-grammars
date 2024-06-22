@@ -1,0 +1,10 @@
+[package]
+name        = "helper"
+description = "git submodule helper"
+edition     = { workspace = true }
+
+[dependencies]
+anyhow   = { workspace = true }
+git2     = { workspace = true }
+indexmap = { workspace = true }
+url      = { workspace = true }

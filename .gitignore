@@ -6,8 +6,10 @@
 **.lib
 **.obj
 
-**/target
+/target
 /output
 /tmp
-grammars/
 .DS_Store
+
+/.vscode
+/.lapce

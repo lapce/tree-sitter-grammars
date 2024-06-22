@@ -1,0 +1,17 @@
+[workspace]
+resolver = "2"
+members  = ["helper"]
+
+[workspace.package]
+authors     = ["panekj"]
+license     = "Apache-2.0"
+edition     = "2021"
+description = "Helper program to manage tree-sitter grammars submodules"
+
+[workspace.metadata]
+
+[workspace.dependencies]
+anyhow   = { version = "1.0" }
+git2     = { version = "0.18.3" }
+indexmap = { version = "2.2.6" }
+url      = { version = "2.5.0" }
