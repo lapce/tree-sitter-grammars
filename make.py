@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 """Script to build all grammars"""
 
+# pylint: disable-next=unused-import
+import readline
+import cmd
 import os
 import sys
 import logging
 from pathlib import Path
 from platform import system
 from shutil import copy
-from subprocess import run
+import subprocess
 
 ci = os.getenv("GITHUB_ACTIONS")
 
@@ -15,20 +18,20 @@ logger = logging.getLogger(__name__)
 
 # GitHub Actions log level names
 logging.addLevelName(logging.ERROR, "error")
-logging.addLevelName(logging.INFO, "notice")
+# logging.addLevelName(logging.INFO, "notice")
 logging.addLevelName(logging.WARN, "warning")
 logging.addLevelName(logging.DEBUG, "debug")
 
 if ci is not None:
     logging.basicConfig(
         stream=sys.stdout,
-        level=logging.INFO,
+        level=logging.DEBUG,
         format="::%(levelname)s title=make.py::%(message)s",
     )
 else:
     logging.basicConfig(
         stream=sys.stderr,
-        level=logging.INFO,
+        level=logging.DEBUG,
         format="%(asctime)s %(levelname)s %(message)s",
     )
 
@@ -50,40 +53,64 @@ def lib_suffix():
             return ""
 
 
-def build(grammar, grammar_name, output):
-    """Build tree-sitter grammar"""
+def run(command: list[str], workdir: Path, err: str):
+    logger.debug('workdir: %s', workdir)
+    logger.debug('command: %s', command)
     # pylint: disable-next=exec-used
-    make = run(
-        [
-            "tree-sitter",
-            "build",
-            "--output",
-            output.joinpath(f"lib{grammar_name}.{lib_suffix()}"),
-            ".",
-        ],
+    proc = subprocess.run(
+        command,
         capture_output=True,
         check=False,
-        cwd=grammar,
+        cwd=workdir,
     )
-    for line in make.stdout.splitlines():
+    for line in proc.stdout.splitlines():
         logging.info(line.decode())
-    for line in make.stderr.splitlines():
+    for line in proc.stderr.splitlines():
         logging.info(line.decode())
-    if make.returncode != 0:
-        logging.error('Failed to execute "tree-sitter build" for %s', grammar)
+    if proc.returncode != 0:
+        logging.error(err)
         return False
     return True
 
 
-def main():
-    """Main program"""
-    output = cwd.joinpath("output")
-    logging.info("output dir: %s", output)
-    if output.exists() is False:
-        logging.info("Creating 'output' dir")
-        output.mkdir(mode=0o755, parents=True, exist_ok=True)
+def _ts_build(grammar: Path, grammar_name: str, output: Path):
+    if (
+        run(
+            command=[
+                "tree-sitter",
+                "generate",
+                "--no-bindings",
+            ],
+            workdir=grammar.resolve(),
+            err=f'Failed to execute "tree-sitter generate" for {grammar}',
+        )
+        is False
+    ):
+        return False
+    if (
+        run(
+            command=[
+                "tree-sitter",
+                "build",
+                "--output",
+                output.joinpath(f"lib{grammar_name}.{lib_suffix()}"),
+                ".",
+            ],
+            workdir=grammar,
+            err=f'Failed to execute "tree-sitter build" for {grammar}',
+        )
+        is False
+    ):
+        return False
+    return True
 
-    for grammar in sorted(cwd.joinpath("grammars").iterdir()):
+
+def build(output: Path, grammars: list[Path]):
+    """Build entrypoint"""
+    if len(grammars) == 0:
+        grammars = sorted(cwd.joinpath("grammars").iterdir())
+
+    for grammar in grammars:
         if grammar.is_dir() is False:
             logger.info("skipping path: %s", grammar)
             continue
@@ -119,60 +146,39 @@ def main():
             case "tree-sitter-php":  # multi-grammar
                 grammar = grammar.joinpath("php")
 
-        match grammar_name:
-            case "tree-sitter-markdown":
-                for subdir in ["tree-sitter-markdown", "tree-sitter-markdown-inline"]:
-                    if build(grammar.joinpath(subdir), grammar_name, output) is False:
-                        continue
-            case "tree-sitter-ocaml":
-                for subdir in ["grammars/ocaml", "grammars/interface", "grammars/type"]:
-                    if build(grammar.joinpath(subdir), grammar_name, output) is False:
-                        continue
-            case "tree-sitter-typescript":
-                for subdir in ["tsx", "typescript"]:
-                    if build(grammar.joinpath(subdir), grammar_name, output) is False:
-                        continue
-            case "tree-sitter-wasm":
-                for subdir in ["wast", "wat"]:
-                    if build(grammar.joinpath(subdir), grammar_name, output) is False:
-                        continue
-            case _:
-                if build(grammar, grammar_name, output) is False:
+        def _build_multi(dirs: list):
+            for subdir in dirs:
+                # pylint: disable-next=cell-var-from-loop
+                if _ts_build(grammar.joinpath(subdir), grammar_name, output) is False:
                     continue
 
-        def copy_lic(src_lic_path, dst_lic_path):
-            logging.info("copying '%s' to '%s'", src_lic_path, dst_lic_path)
-            copy(src_lic_path, dst_lic_path)
+        match grammar_name:
+            case "tree-sitter-markdown":
+                _build_multi(["tree-sitter-markdown", "tree-sitter-markdown-inline"])
+            case "tree-sitter-ocaml":
+                _build_multi(["grammars/ocaml", "grammars/interface", "grammars/type"])
+            case "tree-sitter-typescript":
+                _build_multi(["tsx", "typescript"])
+            case "tree-sitter-wasm":
+                _build_multi(["wast", "wat"])
+            case _:
+                if _ts_build(grammar, grammar_name, output) is False:
+                    continue
+
+        def copy_lic(src_lic_path: Path):
+            logging.info("copying '%s'", src_lic_path)
+            # pylint: disable-next=cell-var-from-loop
+            copy(src_lic_path, output.joinpath(f"{grammar_name}.LICENSE"))
 
         match grammar_name:
             case "tree-sitter-dhall":
-                copy_lic(
-                    grammar.joinpath("LICENSE"),
-                    output.joinpath(
-                        f"{grammar_name}.LICENSE",
-                    ),
-                )
+                copy_lic(grammar.joinpath("LICENSE"))
             case "tree-sitter-rcl":
-                copy_lic(
-                    grammar.joinpath("..").joinpath("..").joinpath("LICENSE").resolve(),
-                    output.joinpath(
-                        f"{grammar_name}.LICENSE",
-                    ),
-                )
+                copy_lic(grammar.joinpath("..", "..", "LICENSE").resolve())
             case "tree-sitter-ron":
-                copy_lic(
-                    grammar.joinpath("LICENSE-APACHE"),
-                    output.joinpath(
-                        f"{grammar_name}.LICENSE",
-                    ),
-                )
+                copy_lic(grammar.joinpath("LICENSE-APACHE"))
             case "tree-sitter-slint":
-                copy_lic(
-                    grammar.joinpath("LICENSES/MIT.txt"),
-                    output.joinpath(
-                        f"{grammar_name}.LICENSE",
-                    ),
-                )
+                copy_lic(grammar.joinpath("LICENSES/MIT.txt"))
             case _:
                 # Grab all LICENSE files
                 licg = grammar.glob("LICENSE*")
@@ -184,7 +190,8 @@ def main():
                     suffix = "LICENSE"
                     if lic.name.startswith("COPYING"):
                         suffix = "COPYING"
-                    copy_lic(lic, output.joinpath(f"{grammar_name}.{suffix}"))
+                    logging.info("copying '%s'", lic)
+                    copy(lic, output.joinpath(f"{grammar_name}.{suffix}"))
                 else:
                     logging.error("No licence found!!!")
 
@@ -192,5 +199,47 @@ def main():
             print("\n::endgroup::")
 
 
+# pylint: disable=missing-class-docstring,missing-function-docstring,invalid-name
+class TreeSitterMake(cmd.Cmd):
+    intro = "tree-sitter-grammars shell:   type help or ? to list commands.\n"
+    prompt = "(ts-grammars) "
+
+    def do_build(self, arg):
+        paths = []
+        for path in parse(arg):
+            paths.append(Path(path))
+        build(output_dir(), paths)
+
+    def do_return(self, _arg):
+        return True
+
+    def do_quit(self, _arg):
+        return True
+
+    def do_exit(self, _arg):
+        return True
+
+    def do_EOF(self, _arg):
+        return True
+
+
+def parse(arg):
+    "Make args into tuple"
+    return tuple(map(str, arg.split()))
+
+
+def output_dir():
+    "Get artefact output dir"
+    output = cwd.joinpath("output")
+    logging.info("output dir: %s", output)
+    if output.exists() is False:
+        logging.info("Creating 'output' dir")
+        output.mkdir(mode=0o755, parents=True, exist_ok=True)
+    return output
+
+
 if __name__ == "__main__":
-    main()
+    make = TreeSitterMake()
+    if len(sys.argv) == 1:
+        make.cmdqueue = ["build", "return"]
+    make.cmdloop()
