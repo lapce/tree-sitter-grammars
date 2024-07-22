@@ -125,6 +125,15 @@ def build(output: Path, grammars: list[Path]):
         # if next(grammar.glob(f"**/libtree-sitter-*.{lib_suffix()}"), False) is False:
         #     continue
 
+        # pylint: disable=cell-var-from-loop
+        def _symlink_module(mod: str):
+            if grammar.joinpath("node_modules").resolve().exists() is False:
+                os.mkdir(grammar.joinpath("node_modules").resolve())
+            os.symlink(
+                grammar.joinpath("..", mod).resolve(),
+                grammar.joinpath("node_modules", mod).resolve(),
+            )
+
         match grammar_name:
             case "tree-sitter-adl":
                 logging.info("skip building: bad licence")
@@ -133,11 +142,9 @@ def build(output: Path, grammars: list[Path]):
                 logging.info("skip building: bad licence")
                 continue
             case "tree-sitter-astro":
-                os.mkdir(grammar.joinpath("node_modules"))
-                os.symlink(
-                    grammar.joinpath("..", "tree-sitter-html").resolve(),
-                    grammar.joinpath("node_modules", "tree-sitter-html").resolve(),
-                )
+                _symlink_module("tree-sitter-html")
+            case "tree-sitter-cpp":
+                _symlink_module("tree-sitter-c")
             case (
                 "tree-sitter-glimmer"
             ):  # https://github.com/ember-tooling/tree-sitter-glimmer/issues/139
