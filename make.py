@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """Script to build all grammars"""
 
+# pylint: disable=missing-class-docstring,missing-function-docstring,invalid-name
+
 import cmd
 import os
 import sys
@@ -16,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 # GitHub Actions log level names
 logging.addLevelName(logging.ERROR, "error")
-# logging.addLevelName(logging.INFO, "notice")
+logging.addLevelName(logging.INFO, "info")
 logging.addLevelName(logging.WARN, "warning")
 logging.addLevelName(logging.DEBUG, "debug")
 
@@ -54,7 +56,7 @@ def lib_suffix():
 def run(command: list[str], workdir: Path, err: str):
     logger.debug("workdir: %s", workdir)
     logger.debug("command: %s", command)
-    # pylint: disable-next=exec-used
+
     proc = subprocess.run(
         command,
         capture_output=True,
@@ -71,32 +73,42 @@ def run(command: list[str], workdir: Path, err: str):
     return True
 
 
-def _ts_build(grammar: Path, grammar_name: str, output: Path, generate=True):
-    if generate is True:
+def ts_build(grammar: Path, grammar_name: str, output: Path, generate=True, npm=False):
+    if npm is True:
+        command = ["npm", "install"]
         if (
             run(
-                command=[
-                    "tree-sitter",
-                    "generate",
-                    "--no-bindings",
-                ],
+                command=command,
                 workdir=grammar.resolve(),
-                err=f'Failed to execute "tree-sitter generate" for {grammar}',
+                err=f"Failed to execute {command} for {grammar}",
             )
             is False
         ):
             return False
+    if generate is True:
+        command = ["tree-sitter", "generate", "--no-bindings"]
+        if (
+            run(
+                command=command,
+                workdir=grammar.resolve(),
+                err=f"Failed to execute {command} for {grammar}",
+            )
+            is False
+        ):
+            return False
+
+    command = [
+        "tree-sitter",
+        "build",
+        "--output",
+        output.joinpath(f"lib{grammar_name}.{lib_suffix()}"),
+        ".",
+    ]
     if (
         run(
-            command=[
-                "tree-sitter",
-                "build",
-                "--output",
-                output.joinpath(f"lib{grammar_name}.{lib_suffix()}"),
-                ".",
-            ],
+            command=command,
             workdir=grammar,
-            err=f'Failed to execute "tree-sitter build" for {grammar}',
+            err=f"Failed to execute {command} for {grammar}",
         )
         is False
     ):
@@ -134,6 +146,8 @@ def build(output: Path, grammars: list[Path]):
                 grammar.joinpath("node_modules", mod).resolve(),
             )
 
+        # Prep phase
+
         match grammar_name:
             case "tree-sitter-adl":
                 logging.info("skip building: bad licence")
@@ -141,15 +155,17 @@ def build(output: Path, grammars: list[Path]):
             case "tree-sitter-angular":
                 logging.info("skip building: bad licence")
                 continue
-            case "tree-sitter-astro":
-                _symlink_module("tree-sitter-html")
-            case "tree-sitter-cpp":
-                _symlink_module("tree-sitter-c")
+            # case "tree-sitter-astro":
+            #     _symlink_module("tree-sitter-html")
+            # case "tree-sitter-cpp":
+            #     _symlink_module("tree-sitter-c")
             case (
                 "tree-sitter-glimmer"
             ):  # https://github.com/ember-tooling/tree-sitter-glimmer/issues/139
                 logging.info("skip building: bad licence")
                 continue
+            # case "tree-sitter-glsl":
+            #     _symlink_module("tree-sitter-c")
             case "tree-sitter-odin":
                 logging.info("skip building: unknown issue")
                 continue
@@ -158,42 +174,55 @@ def build(output: Path, grammars: list[Path]):
             case "tree-sitter-php":  # multi-grammar
                 grammar = grammar.joinpath("php")
 
-        def _build_multi(dirs: list):
+        def _build_multi(dirs: list, generate=False, npm=False):
             for subdir in dirs:
                 # pylint: disable-next=cell-var-from-loop
-                if _ts_build(grammar.joinpath(subdir), grammar_name, output) is False:
+                if ts_build(grammar.joinpath(subdir), grammar_name, output, generate, npm) is False:
                     continue
 
+        # Build phase
+
         match grammar_name:
+            case "tree-sitter-astro":
+                if ts_build(grammar, grammar_name, output, npm=True) is False:
+                    continue
+            case "tree-sitter-cpp":
+                if ts_build(grammar, grammar_name, output, npm=True) is False:
+                    continue
             case "tree-sitter-c-sharp":
-                if _ts_build(grammar, grammar_name, output, generate=False) is False:
+                if ts_build(grammar, grammar_name, output, generate=False) is False:
+                    continue
+            case "tree-sitter-glsl":
+                if ts_build(grammar, grammar_name, output, npm=True) is False:
                     continue
             case "tree-sitter-markdown":
                 _build_multi(["tree-sitter-markdown", "tree-sitter-markdown-inline"])
             case "tree-sitter-ocaml":
                 _build_multi(["grammars/ocaml", "grammars/interface", "grammars/type"])
             case "tree-sitter-typescript":
-                _build_multi(["tsx", "typescript"])
+                _build_multi(["tsx", "typescript"], npm=True)
             case "tree-sitter-wasm":
                 _build_multi(["wast", "wat"])
             case _:
-                if _ts_build(grammar, grammar_name, output) is False:
+                if ts_build(grammar, grammar_name, output) is False:
                     continue
 
-        def copy_lic(src_lic_path: Path):
+        # License phase
+
+        def _copy_lic(src_lic_path: Path):
             logging.info("copying '%s'", src_lic_path)
             # pylint: disable-next=cell-var-from-loop
             copy(src_lic_path, output.joinpath(f"{grammar_name}.LICENSE"))
 
         match grammar_name:
             case "tree-sitter-dhall":
-                copy_lic(grammar.joinpath("LICENSE"))
+                _copy_lic(grammar.joinpath("LICENSE"))
             case "tree-sitter-rcl":
-                copy_lic(grammar.joinpath("..", "..", "LICENSE").resolve())
+                _copy_lic(grammar.joinpath("..", "..", "LICENSE").resolve())
             case "tree-sitter-ron":
-                copy_lic(grammar.joinpath("LICENSE-APACHE"))
+                _copy_lic(grammar.joinpath("LICENSE-APACHE"))
             case "tree-sitter-slint":
-                copy_lic(grammar.joinpath("LICENSES/MIT.txt"))
+                _copy_lic(grammar.joinpath("LICENSES", "MIT.txt"))
             case _:
                 # Grab all LICENSE files
                 licg = grammar.glob("LICENSE*")
@@ -208,13 +237,12 @@ def build(output: Path, grammars: list[Path]):
                     logging.info("copying '%s'", lic)
                     copy(lic, output.joinpath(f"{grammar_name}.{suffix}"))
                 else:
-                    logging.error("No licence found!!!")
+                    logging.error("%s: No licence found!!!", grammar_name)
 
         if ci is not None:
             print("\n::endgroup::")
 
 
-# pylint: disable=missing-class-docstring,missing-function-docstring,invalid-name
 class TreeSitterMake(cmd.Cmd):
     intro = "tree-sitter-grammars shell:   type help or ? to list commands.\n"
     prompt = "(ts-grammars) "
