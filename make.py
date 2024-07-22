@@ -52,8 +52,8 @@ def lib_suffix():
 
 
 def run(command: list[str], workdir: Path, err: str):
-    logger.debug('workdir: %s', workdir)
-    logger.debug('command: %s', command)
+    logger.debug("workdir: %s", workdir)
+    logger.debug("command: %s", command)
     # pylint: disable-next=exec-used
     proc = subprocess.run(
         command,
@@ -71,20 +71,21 @@ def run(command: list[str], workdir: Path, err: str):
     return True
 
 
-def _ts_build(grammar: Path, grammar_name: str, output: Path):
-    if (
-        run(
-            command=[
-                "tree-sitter",
-                "generate",
-                "--no-bindings",
-            ],
-            workdir=grammar.resolve(),
-            err=f'Failed to execute "tree-sitter generate" for {grammar}',
-        )
-        is False
-    ):
-        return False
+def _ts_build(grammar: Path, grammar_name: str, output: Path, generate=True):
+    if generate is True:
+        if (
+            run(
+                command=[
+                    "tree-sitter",
+                    "generate",
+                    "--no-bindings",
+                ],
+                workdir=grammar.resolve(),
+                err=f'Failed to execute "tree-sitter generate" for {grammar}',
+            )
+            is False
+        ):
+            return False
     if (
         run(
             command=[
@@ -131,6 +132,12 @@ def build(output: Path, grammars: list[Path]):
             case "tree-sitter-angular":
                 logging.info("skip building: bad licence")
                 continue
+            case "tree-sitter-astro":
+                os.mkdir(grammar.joinpath("node_modules"))
+                os.symlink(
+                    grammar.joinpath("..", "tree-sitter-html").resolve(),
+                    grammar.joinpath("node_modules", "tree-sitter-html").resolve(),
+                )
             case (
                 "tree-sitter-glimmer"
             ):  # https://github.com/ember-tooling/tree-sitter-glimmer/issues/139
@@ -151,6 +158,9 @@ def build(output: Path, grammars: list[Path]):
                     continue
 
         match grammar_name:
+            case "tree-sitter-c-sharp":
+                if _ts_build(grammar, grammar_name, output, generate=False) is False:
+                    continue
             case "tree-sitter-markdown":
                 _build_multi(["tree-sitter-markdown", "tree-sitter-markdown-inline"])
             case "tree-sitter-ocaml":
