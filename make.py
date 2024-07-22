@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 """Script to build all grammars"""
 
-# pylint: disable-next=unused-import
-import readline
 import cmd
 import os
 import sys
