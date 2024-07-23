@@ -151,18 +151,18 @@ def build(output: Path, grammars: list[Path]):
 
         match grammar_name:
             case "tree-sitter-adl":
-                logging.warning("skip building: bad licence")
+                logging.warning("%s: skip building: %s", grammar_name, "bad licence")
                 continue
             case "tree-sitter-angular":
-                logging.warning("skip building: bad licence")
+                logging.warning("%s: skip building: %s", grammar_name, "bad licence")
                 continue
             case (
                 "tree-sitter-glimmer"
             ):  # https://github.com/ember-tooling/tree-sitter-glimmer/issues/139
-                logging.warning("skip building: bad licence")
+                logging.warning("%s: skip building: %s", grammar_name, "bad licence")
                 continue
             case "tree-sitter-odin":
-                logging.warning("skip building: unknown issue")
+                logging.warning("%s: skip building: %s", grammar_name, "unknown issue")
                 continue
             case "tree-sitter-rcl":  # monorepo
                 grammar = grammar.joinpath("grammar").joinpath("tree-sitter-rcl")
