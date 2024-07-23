@@ -62,7 +62,7 @@ def run(command: list[str], workdir: Path, err: str):
         capture_output=True,
         check=False,
         cwd=workdir,
-        shell=True,
+        shell=(system() == "Windows"),
     )
     for line in proc.stdout.splitlines():
         logging.info(line.decode())
