@@ -212,8 +212,6 @@ def build(output: Path, grammars: list[Path]):
         match grammar_name:
             case "tree-sitter-dhall":
                 _copy_lic(grammar.joinpath("LICENSE"))
-            case "tree-sitter-php":
-                _copy_lic(grammar.joinpath("..", "LICENSE").resolve())
             case "tree-sitter-rcl":
                 _copy_lic(grammar.joinpath("..", "..", "LICENSE").resolve())
             case "tree-sitter-ron":
