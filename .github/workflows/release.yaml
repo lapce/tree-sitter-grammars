@@ -81,16 +81,23 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
 
-      - name: Select tag
+      - name: Create release (nightly)
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-        run: echo 'RELEASE_TAG=nightly' > $GITHUB_ENV
+        run: |
+          gh release create \
+            --prelease \
+            --draft \
+            --title Nightly \
+            --target $GITHUB_SHA \
+            nightly \
+            windows-*/* linux-*/* macos-*/*
 
-      - name: Select tag
+      - name: Create release (tag)
         if: github.event_name == 'push'
-        run: echo "RELEASE_TAG=${{ github.ref }}" > $GITHUB_ENV
-
-      - run: |
-          gh release create ${RELEASE_TAG#refs/tags/} \
+        run: |
+          gh release create \
+            --draft \
             --title ${RELEASE_TAG#refs/tags/} \
             --target $GITHUB_SHA \
+            ${RELEASE_TAG#refs/tags/} \
             windows-*/* linux-*/* macos-*/*
