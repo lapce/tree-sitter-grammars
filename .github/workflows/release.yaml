@@ -54,6 +54,10 @@ jobs:
         with:
           python-version: '3.x'
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts
+
       - name: Build grammars
         if: always()
         run: python ./make.py
