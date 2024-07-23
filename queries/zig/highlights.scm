@@ -1,15 +1,20 @@
-; source: https://github.com/helix-editor/helix/blob/master/runtime/queries/zig/highlights.scm
-; licence: https://github.com/helix-editor/helix/blob/master/LICENSE
-; spdx: MPL-2.0
-
 [
   (container_doc_comment)
   (doc_comment)
-] @comment.documentation
+  (line_comment)
+] @comment @spell
 
 [
-  (line_comment)
-] @comment.line
+  variable: (IDENTIFIER)
+  variable_type_function: (IDENTIFIER)
+] @variable
+
+parameter: (IDENTIFIER) @parameter
+
+[
+  field_member: (IDENTIFIER)
+  field_access: (IDENTIFIER)
+] @field
 
 ;; assume TitleCase is a type
 (
@@ -20,7 +25,6 @@
   ] @type
   (#match? @type "^[A-Z]([a-z]+[A-Za-z0-9]*)*$")
 )
-
 ;; assume camelCase is a function
 (
   [
@@ -40,154 +44,150 @@
   (#match? @constant "^[A-Z][A-Z_0-9]+$")
 )
 
-;; _
-(
-  (IDENTIFIER) @variable.builtin
-  (#eq? @variable.builtin "_")
-)
-
-;; C Pointers [*c]T
-(PtrTypeStart "c" @variable.builtin)
-
-[
-  variable: (IDENTIFIER)
-  variable_type_function: (IDENTIFIER)
-] @variable
-
-parameter: (IDENTIFIER) @variable.parameter
-
-[
-  field_member: (IDENTIFIER)
-  field_access: (IDENTIFIER)
-] @variable.other.member
-
 [
   function_call: (IDENTIFIER)
   function: (IDENTIFIER)
 ] @function
 
-exception: "!" @keyword.control.exception
+exception: "!" @exception
+
+(
+  (IDENTIFIER) @variable.builtin
+  (#eq? @variable.builtin "_")
+)
+
+(PtrTypeStart "c" @variable.builtin)
+
+(
+  (ContainerDeclType
+    [
+      (ErrorUnionExpr)
+      "enum"
+    ]
+  )
+  (ContainerField (IDENTIFIER) @constant)
+)
 
 field_constant: (IDENTIFIER) @constant
 
 (BUILTINIDENTIFIER) @function.builtin
 
-((BUILTINIDENTIFIER) @keyword.control.import
-  (#any-of? @keyword.control.import "@import" "@cImport"))
+((BUILTINIDENTIFIER) @include
+  (#any-of? @include "@import" "@cImport"))
 
-(INTEGER) @constant.numeric.integer
+(INTEGER) @number
 
-(FLOAT) @constant.numeric.float
+(FLOAT) @float
+
+[
+  "true"
+  "false"
+] @boolean
 
 [
   (LINESTRING)
   (STRINGLITERALSINGLE)
-] @string
+] @string @spell
 
-(CHAR_LITERAL) @constant.character
-(EscapeSequence) @constant.character.escape
+(CHAR_LITERAL) @character
+(EscapeSequence) @string.escape
 (FormatSequence) @string.special
-
-[
-  "anytype"
-  "anyframe"
-  (BuildinTypeExpr)
-] @type.builtin
 
 (BreakLabel (IDENTIFIER) @label)
 (BlockLabel (IDENTIFIER) @label)
 
 [
-  "true"
-  "false"
-] @constant.builtin.boolean
-
-[
-  "undefined"
-  "unreachable"
-  "null"
-] @constant.builtin
-
-[
-  "else"
-  "if"
-  "switch"
-] @keyword.control.conditional
-
-[
-  "for"
-  "while"
-] @keyword.control.repeat
-
-[
-  "or"
-  "and"
-  "orelse"
-] @keyword.operator
-
-[
+  "asm"
+  "defer"
+  "errdefer"
+  "test"
   "struct"
-  "enum"
   "union"
-  "packed"
+  "enum"
   "opaque"
-  "export"
-  "extern"
-  "linksection"
-] @keyword.storage.type
-
-[
-  "const"
-  "var"
-  "threadlocal"
-  "allowzero"
-  "volatile"
-  "align"
-] @keyword.storage.modifier
-
-[
-  "try"
   "error"
-  "catch"
-] @keyword.control.exception
+] @keyword
+
+[
+  "async"
+  "await"
+  "suspend"
+  "nosuspend"
+  "resume"
+] @keyword.coroutine
 
 [
   "fn"
 ] @keyword.function
 
 [
-  "test"
-] @keyword
-
-[
-  "pub"
-  "usingnamespace"
-] @keyword.control.import
+  "and"
+  "or"
+  "orelse"
+] @keyword.operator
 
 [
   "return"
-  "break"
-  "continue"
-] @keyword.control.return
+] @keyword.return
 
 [
-  "defer"
-  "errdefer"
-  "async"
-  "nosuspend"
-  "await"
-  "suspend"
-  "resume"
-] @function.macro
+  "if"
+  "else"
+  "switch"
+] @conditional
+
+[
+  "for"
+  "while"
+  "break"
+  "continue"
+] @repeat
+
+[
+  "usingnamespace"
+] @include
+
+[
+  "try"
+  "catch"
+] @exception
+
+[
+  "anytype"
+  (BuildinTypeExpr)
+] @type.builtin
+
+[
+  "const"
+  "var"
+  "volatile"
+  "allowzero"
+  "noalias"
+] @type.qualifier
+
+[
+  "addrspace"
+  "align"
+  "callconv"
+  "linksection"
+] @storageclass
 
 [
   "comptime"
+  "export"
+  "extern"
   "inline"
   "noinline"
-  "asm"
-  "callconv"
-  "noalias"
-] @keyword.directive
+  "packed"
+  "pub"
+  "threadlocal"
+] @attribute
+
+[
+  "null"
+  "unreachable"
+  "undefined"
+] @constant.builtin
 
 [
   (CompareOp)
@@ -229,4 +229,5 @@ field_constant: (IDENTIFIER) @constant
   (PtrIndexPayload "|")
 ] @punctuation.bracket
 
-(ERROR) @keyword.control.exception
+; Error
+(ERROR) @error
