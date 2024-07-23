@@ -151,29 +151,21 @@ def build(output: Path, grammars: list[Path]):
 
         match grammar_name:
             case "tree-sitter-adl":
-                logging.info("skip building: bad licence")
+                logging.warning("skip building: bad licence")
                 continue
             case "tree-sitter-angular":
-                logging.info("skip building: bad licence")
+                logging.warning("skip building: bad licence")
                 continue
-            # case "tree-sitter-astro":
-            #     _symlink_module("tree-sitter-html")
-            # case "tree-sitter-cpp":
-            #     _symlink_module("tree-sitter-c")
             case (
                 "tree-sitter-glimmer"
             ):  # https://github.com/ember-tooling/tree-sitter-glimmer/issues/139
-                logging.info("skip building: bad licence")
+                logging.warning("skip building: bad licence")
                 continue
-            # case "tree-sitter-glsl":
-            #     _symlink_module("tree-sitter-c")
             case "tree-sitter-odin":
-                logging.info("skip building: unknown issue")
+                logging.warning("skip building: unknown issue")
                 continue
             case "tree-sitter-rcl":  # monorepo
                 grammar = grammar.joinpath("grammar").joinpath("tree-sitter-rcl")
-            case "tree-sitter-php":  # multi-grammar
-                grammar = grammar.joinpath("php")
 
         def _build_multi(dirs: list, generate=False, npm=False):
             for subdir in dirs:
@@ -200,6 +192,8 @@ def build(output: Path, grammars: list[Path]):
                 _build_multi(["tree-sitter-markdown", "tree-sitter-markdown-inline"])
             case "tree-sitter-ocaml":
                 _build_multi(["grammars/ocaml", "grammars/interface", "grammars/type"])
+            case "tree-sitter-php":
+                _build_multi(["php", "php_only"])
             case "tree-sitter-typescript":
                 _build_multi(["tsx", "typescript"], npm=True)
             case "tree-sitter-wasm":
@@ -218,6 +212,8 @@ def build(output: Path, grammars: list[Path]):
         match grammar_name:
             case "tree-sitter-dhall":
                 _copy_lic(grammar.joinpath("LICENSE"))
+            case "tree-sitter-php":
+                _copy_lic(grammar.joinpath("..", "LICENSE").resolve())
             case "tree-sitter-rcl":
                 _copy_lic(grammar.joinpath("..", "..", "LICENSE").resolve())
             case "tree-sitter-ron":
