@@ -79,7 +79,17 @@ jobs:
     needs: [build]
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
     steps:
+      # Must perform checkout first, since it deletes the target directory
+      # before running, and would therefore delete the downloaded artifacts
+      - uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
+
+      - if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        name: Re-Tag nightly
+        run: |
+          gh release delete nightly --yes || true
+          git push origin :nightly || true
 
       - name: Create release (nightly)
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
