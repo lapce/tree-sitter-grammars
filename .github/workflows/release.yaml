@@ -86,6 +86,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: ./artefacts
+          merge-multiple: true
 
       - name: Create tarball
         run: |
