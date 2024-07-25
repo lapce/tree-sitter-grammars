@@ -113,7 +113,7 @@
 
 [submodule "grammars/tree-sitter-f-sharp"]
 	path = "grammars/tree-sitter-f-sharp"
-	url = "git@github.com:ionide/tree-sitter-f-sharp.git"
+	url = "git@github.com:ionide/tree-sitter-fsharp.git"
 
 [submodule "grammars/tree-sitter-fish"]
 	path = "grammars/tree-sitter-fish"
@@ -406,7 +406,7 @@
 
 [submodule "grammars/tree-sitter-sql"]
 	path = "grammars/tree-sitter-sql"
-	url = "git@github.com:tree-sitter-grammars/tree-sitter-sql.git"
+	url = "git@github.com:DerekStride/tree-sitter-sql.git"
 
 [submodule "grammars/tree-sitter-ssh-client-config"]
 	path = "grammars/tree-sitter-ssh-client-config"
