@@ -22,6 +22,20 @@ git submodule update --init --recursive
 
 Built artefacts are in `./output`
 
+### Clean
+
+Removes untracked files
+
+```shell
+git submodule foreach git clean -f
+```
+
+Removes untracked and ignored files
+
+```shell
+git submodule foreach git clean -f -x
+```
+
 ## Update
 
 ### Update sequence
