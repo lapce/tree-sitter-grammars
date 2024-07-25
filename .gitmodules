@@ -12,7 +12,7 @@
 
 [submodule "grammars/tree-sitter-angular"]
 	path = "grammars/tree-sitter-angular"
-	url = "git@github.com:steelsojka/tree-sitter-angular.git"
+	url = "git@github.com:dlvandenberg/tree-sitter-angular.git"
 
 [submodule "grammars/tree-sitter-astro"]
 	path = "grammars/tree-sitter-astro"

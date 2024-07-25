@@ -153,9 +153,6 @@ def build(output: Path, grammars: list[Path]):
             case "tree-sitter-adl":
                 logging.warning("%s: skip building: %s", grammar_name, "bad licence")
                 continue
-            case "tree-sitter-angular":
-                logging.warning("%s: skip building: %s", grammar_name, "bad licence")
-                continue
             case (
                 "tree-sitter-glimmer"
             ):  # https://github.com/ember-tooling/tree-sitter-glimmer/issues/139
@@ -176,6 +173,9 @@ def build(output: Path, grammars: list[Path]):
         # Build phase
 
         match grammar_name:
+            case "tree-sitter-angular":
+                if ts_build(grammar, grammar_name, output, npm=True) is False:
+                    continue
             case "tree-sitter-astro":
                 if ts_build(grammar, grammar_name, output, npm=True) is False:
                     continue
