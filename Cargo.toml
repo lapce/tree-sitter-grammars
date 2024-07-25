@@ -14,4 +14,4 @@ description = "Helper program to manage tree-sitter grammars submodules"
 anyhow   = { version = "1.0" }
 git2     = { version = "0.18.3" }
 indexmap = { version = "2.2.6" }
-url      = { version = "2.5.0" }
+url      = { version = "2.5.2" }
