@@ -84,6 +84,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: actions/download-artifact@v4
+        with:
+          path: ./artefacts
+
+      - name: Create tarball
+        run: |
+          tar -C ./queries -cvf ./artefacts/queries.tar .
+          zstd ./artefacts/queries.tar -o ./artefacts/queries.tar.zst
 
       - if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         name: Re-Tag nightly
@@ -100,7 +107,7 @@ jobs:
             --title Nightly \
             --target $GITHUB_SHA \
             nightly \
-            windows-*/* linux-*/* macos-*/*
+            ./artefacts/*.zst
 
       - name: Create release (tag)
         if: github.event_name == 'push'
@@ -110,4 +117,4 @@ jobs:
             --title ${RELEASE_TAG#refs/tags/} \
             --target $GITHUB_SHA \
             ${RELEASE_TAG#refs/tags/} \
-            windows-*/* linux-*/* macos-*/*
+            ./artefacts/*.zst
