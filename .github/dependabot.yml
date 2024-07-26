@@ -12,6 +12,7 @@ updates:
 
   - package-ecosystem: gitsubmodule
     directory: /
+    open-pull-requests-limit: 25
     schedule:
       interval: weekly
 
