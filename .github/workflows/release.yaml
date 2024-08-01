@@ -30,7 +30,7 @@ jobs:
             artefact: linux-x86_64
 
           - runs-on: macos-14
-            artefact: macos-arm64
+            artefact: macos-aarch64
 
           - runs-on: macos-13
             artefact: macos-x86_64
