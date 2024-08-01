@@ -65,14 +65,14 @@ jobs:
       - name: Create tarball
         run: |
           tar -C ./output -cvf ./${{ matrix.artefact }}.tar .
-          zstd ./${{ matrix.artefact }}.tar -o ./${{ matrix.artefact }}.tar.zst
+          zstd ./${{ matrix.artefact }}.tar -o ./grammars-${{ matrix.artefact }}.tar.zst
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ matrix.artefact }}
           path: |
-            ./${{ matrix.artefact }}.tar.zst
+            ./grammars-${{ matrix.artefact }}.tar.zst
           retention-days: 3
   release:
     runs-on: ubuntu-latest
@@ -88,7 +88,7 @@ jobs:
           path: ./artefacts
           merge-multiple: true
 
-      - name: Create tarball
+      - name: Create queries tarball
         run: |
           tar -C ./queries -cvf ./artefacts/queries.tar .
           zstd ./artefacts/queries.tar -o ./artefacts/queries.tar.zst
