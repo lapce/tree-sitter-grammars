@@ -50,17 +50,13 @@ jobs:
         run: |
           cargo install tree-sitter-cli@^0.22 --locked
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
       - name: Build grammars
         if: always()
-        run: python ./make.py
+        run: cargo run --release -- --output ./output --/tmp ./tmp
 
       - name: Create tarball
         run: |
