@@ -83,6 +83,10 @@ jobs:
       # before running, and would therefore delete the downloaded artifacts
       - uses: actions/checkout@v4
 
+      - name: Checkout helix repo
+        run: |
+          git submodule update --init ./queries-helix/
+
       - uses: actions/download-artifact@v4
         with:
           path: ./artefacts
@@ -90,7 +94,14 @@ jobs:
 
       - name: Create queries tarball
         run: |
-          tar -C ./queries -cvf ./artefacts/queries.tar .
+          mkdir -p ./queries-output/
+
+          rsync -avh --progress ./queries-helix/runtime/queries/ ./queries-output/
+          cp ./queries-helix/LICENSE ./queries/helix.LICENSE
+
+          rsync -avh --progress ./queries/ ./queries-output/
+
+          tar -C ./queries-output -cvf ./artefacts/queries.tar .
           zstd ./artefacts/queries.tar -o ./artefacts/queries.tar.zst
 
       - if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
