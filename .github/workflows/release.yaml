@@ -104,6 +104,9 @@ jobs:
           tar -C ./queries-output -cvf ./artefacts/queries.tar .
           zstd ./artefacts/queries.tar -o ./artefacts/queries.tar.zst
 
+      - if: github.event_name == 'workflow_dispatch'
+        run: echo "TAG_NAME=${{ github.event.inputs.tag_name }}" | tee -a $GITHUB_ENV  
+
       - if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         name: Re-Tag nightly
         run: |
@@ -122,12 +125,11 @@ jobs:
             ./artefacts/*.zst
 
       - name: Create release (tag)
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         env:
           RELEASE_TAG: ${{ inputs.tag_name }}
         run: |
           gh release create \
-            --draft \
             --title ${RELEASE_TAG#refs/tags/} \
             --target $GITHUB_SHA \
             ${RELEASE_TAG#refs/tags/} \
