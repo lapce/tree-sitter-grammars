@@ -99,8 +99,6 @@ jobs:
           rsync -avh --progress ./queries-helix/runtime/queries/ ./queries-output/
           cp ./queries-helix/LICENSE ./queries/helix.LICENSE
 
-          rsync -avh --progress ./queries/ ./queries-output/
-
           tar -C ./queries-output -cvf ./artefacts/queries.tar .
           zstd ./artefacts/queries.tar -o ./artefacts/queries.tar.zst
 
