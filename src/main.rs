@@ -105,14 +105,9 @@ fn main() -> Result<()> {
     };
 
     for grammar in config.grammar {
-        let path = tmp_dir.join(format! {"tree-sitter-{}",grammar.name});
-        checkout_repo(&path, &grammar.source.git, &grammar.source.rev)?;
-        let path = if let Some(subpath) = grammar.source.subpath.as_ref() {
-            path.join(subpath)
-        } else {
-            path
-        };
-        build_tree_sitter(&grammar.name, &path, &output_dir)?;
+        if let Err(e) = build_grammar(&grammar, &output_dir, &tmp_dir) {
+            println!("error build grammar {}: {e}", grammar.name,)
+        }
     }
     Ok(())
 }
@@ -151,6 +146,22 @@ fn checkout_repo(path: &Path, repo: &str, rev: &str) -> Result<()> {
             .output();
     }
 
+    Ok(())
+}
+
+fn build_grammar(
+    grammar: &GrammarConfig,
+    output_dir: &Path,
+    tmp_dir: &Path,
+) -> Result<()> {
+    let path = tmp_dir.join(format! {"tree-sitter-{}",grammar.name});
+    checkout_repo(&path, &grammar.source.git, &grammar.source.rev)?;
+    let path = if let Some(subpath) = grammar.source.subpath.as_ref() {
+        path.join(subpath)
+    } else {
+        path
+    };
+    build_tree_sitter(&grammar.name, &path, output_dir)?;
     Ok(())
 }
 
