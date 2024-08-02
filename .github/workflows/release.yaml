@@ -126,7 +126,7 @@ jobs:
       - name: Create release (tag)
         if: github.event_name == 'push'
         env:
-          RELEASE_TAG: ${{ inputs.tag_name }}
+          RELEASE_TAG: ${{ github.ref }}
         run: |
           gh release create \
             --title ${RELEASE_TAG#refs/tags/} \
