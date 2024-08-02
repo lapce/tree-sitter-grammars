@@ -3,7 +3,8 @@ use clap::Parser;
 use dunce::canonicalize;
 use serde::{Deserialize, Serialize};
 use std::{
-    fs::{self},
+    fs,
+    io::{stderr, stdout},
     path::{Path, PathBuf},
     process::Command,
 };
@@ -166,6 +167,7 @@ fn build_grammar(
 }
 
 fn build_tree_sitter(name: &str, path: &Path, output: &Path) -> Result<()> {
+    println!("-----------------------------------");
     println!("now building tree sitter for {name}");
     let output = Command::new("tree-sitter")
         .current_dir(path)
@@ -175,6 +177,8 @@ fn build_tree_sitter(name: &str, path: &Path, output: &Path) -> Result<()> {
             "libtree-sitter-{name}.{}",
             std::env::consts::DLL_EXTENSION
         )))
+        .stdout(stdout())
+        .stderr(stderr())
         .output()?;
     if !output.status.success() {
         return Err(anyhow!("tree sitter build failed for {name}"));
