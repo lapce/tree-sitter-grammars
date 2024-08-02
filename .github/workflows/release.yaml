@@ -118,14 +118,13 @@ jobs:
         run: |
           gh release create \
             --prerelease \
-            --draft \
             --title Nightly \
             --target $GITHUB_SHA \
             nightly \
             ./artefacts/*.zst
 
       - name: Create release (tag)
-        if: github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        if: github.event_name == 'push'
         env:
           RELEASE_TAG: ${{ inputs.tag_name }}
         run: |
