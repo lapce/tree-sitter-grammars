@@ -484,3 +484,6 @@
 [submodule "grammars/tree-sitter-zig"]
 	path = "grammars/tree-sitter-zig"
 	url = "git@github.com:maxxnino/tree-sitter-zig.git"
+[submodule "queries-helix"]
+	path = queries-helix
+	url = git@github.com:helix-editor/helix.git
