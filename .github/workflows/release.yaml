@@ -56,7 +56,7 @@ jobs:
 
       - name: Build grammars
         if: always()
-        run: mkdir ./output && mkdir ./tmp && cargo run --release -- --output ./output --/tmp ./tmp
+        run: mkdir ./output && mkdir ./tmp && cargo run --release -- --output ./output --tmp ./tmp
 
       - name: Create tarball
         run: |
