@@ -81,7 +81,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: runner.os == 'Linux'
         with:
-          name: ${{ matrix.artefact }}
+          name: queries
           path: |
             ./queries.tar.zst
           retention-days: 3
