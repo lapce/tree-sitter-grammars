@@ -50,17 +50,13 @@ jobs:
         run: |
           cargo install tree-sitter-cli@^0.22 --locked
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
       - name: Build grammars
         if: always()
-        run: python ./make.py
+        run: mkdir ./output && mkdir ./tmp && cargo run --release -- --output ./output --tmp ./tmp
 
       - name: Create tarball
         run: |
@@ -83,10 +79,6 @@ jobs:
       # before running, and would therefore delete the downloaded artifacts
       - uses: actions/checkout@v4
 
-      - name: Checkout helix repo
-        run: |
-          git submodule update --init ./queries-helix/
-
       - uses: actions/download-artifact@v4
         with:
           path: ./artefacts
@@ -96,8 +88,8 @@ jobs:
         run: |
           mkdir -p ./queries-output/
 
-          rsync -avh --progress ./queries-helix/runtime/queries/ ./queries-output/
-          cp ./queries-helix/LICENSE ./queries/helix.LICENSE
+          rsync -avh --progress ./tmp/helix/runtime/queries/ ./queries-output/
+          cp ./tmp/helix/LICENSE ./queries/helix.LICENSE
 
           tar -C ./queries-output -cvf ./artefacts/queries.tar .
           zstd ./artefacts/queries.tar -o ./artefacts/queries.tar.zst
