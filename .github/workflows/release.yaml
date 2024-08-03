@@ -63,12 +63,27 @@ jobs:
           tar -C ./output -cvf ./${{ matrix.artefact }}.tar .
           zstd ./${{ matrix.artefact }}.tar -o ./grammars-${{ matrix.artefact }}.tar.zst
 
+      - name: Create queries
+        if: runner.os == 'Linux'
+        run: |
+          cp ./tmp/helix/LICENSE ./tmp/helix/queries/helix.LICENSE
+          tar -C ./tmp/helix/runtime/queries -cvf ./queries.tar .
+          zstd ./queries.tar -o ./queries.tar.zst
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ matrix.artefact }}
           path: |
             ./grammars-${{ matrix.artefact }}.tar.zst
+          retention-days: 3
+
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Linux'
+        with:
+          name: ${{ matrix.artefact }}
+          path: |
+            ./queries.tar.zst
           retention-days: 3
   release:
     runs-on: ubuntu-latest
@@ -83,16 +98,6 @@ jobs:
         with:
           path: ./artefacts
           merge-multiple: true
-
-      - name: Create queries tarball
-        run: |
-          mkdir -p ./queries-output/
-
-          rsync -avh --progress ./tmp/helix/runtime/queries/ ./queries-output/
-          cp ./tmp/helix/LICENSE ./queries/helix.LICENSE
-
-          tar -C ./queries-output -cvf ./artefacts/queries.tar .
-          zstd ./artefacts/queries.tar -o ./artefacts/queries.tar.zst
 
       - if: github.event_name == 'workflow_dispatch'
         run: echo "TAG_NAME=${{ github.event.inputs.tag_name }}" | tee -a $GITHUB_ENV  
