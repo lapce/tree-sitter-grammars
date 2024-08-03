@@ -66,7 +66,7 @@ jobs:
       - name: Create queries
         if: runner.os == 'Linux'
         run: |
-          cp ./tmp/helix/LICENSE ./tmp/helix/queries/helix.LICENSE
+          cp ./tmp/helix/LICENSE ./tmp/helix/runtime/queries/helix.LICENSE
           tar -C ./tmp/helix/runtime/queries -cvf ./queries.tar .
           zstd ./queries.tar -o ./queries.tar.zst
 
