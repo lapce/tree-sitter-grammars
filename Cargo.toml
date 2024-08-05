@@ -9,7 +9,7 @@ edition = "2021"
 anyhow = { version = "1.0" }
 cc = { version = "1.0" }
 clap = { version = "4.5.1", features = [ "derive", "std", "help" ], default-features = false }
-dunce = { version = "1.0.4" }
+dunce = { version = "1.0.5" }
 itertools = "0.12.1"
 serde = { version = "1.0.197", features = ["derive"] }
 toml = { version = "0.8.12" }
