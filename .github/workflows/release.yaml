@@ -45,6 +45,7 @@ jobs:
           sudo apt-get -y update
           sudo apt-get -y install curl wget clang pkg-config
           sudo update-alternatives --set cc /usr/bin/clang
+          sudo update-alternatives --set c++ /usr/bin/clang++
 
       - name: Install tree-sitter-cli
         run: |
