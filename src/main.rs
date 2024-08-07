@@ -142,7 +142,8 @@ fn checkout_repo(path: &Path, repo: &str, rev: &str) -> Result<()> {
 
         let _ = Command::new("git")
             .current_dir(path)
-            .arg("checkout")
+            .arg("reset")
+            .arg("--hard")
             .arg(rev)
             .output();
     }
@@ -177,8 +178,6 @@ fn build_tree_sitter(name: &str, path: &Path, output: &Path) -> Result<()> {
             "libtree-sitter-{name}.{}",
             std::env::consts::DLL_EXTENSION
         )))
-        .stdout(stdout())
-        .stderr(stderr())
         .output()?;
     if !output.status.success() {
         return Err(anyhow!("tree sitter build failed for {name}"));
