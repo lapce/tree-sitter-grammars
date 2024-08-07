@@ -125,7 +125,8 @@ fn checkout_repo(path: &Path, repo: &str, rev: &str) -> Result<()> {
 
         let _ = Command::new("git")
             .current_dir(path)
-            .arg("checkout")
+            .arg("reset")
+            .arg("--hard")
             .arg(rev)
             .output();
     } else {
